@@ -1,0 +1,29 @@
+{
+  "name": "dasuos/mail",
+  "description": "Library providing mail service",
+  "type": "library",
+  "homepage": "https://github.com/Dasuos/Mail",
+  "keywords": [
+    "mail"
+  ],
+  "authors": [
+    {
+      "name": "Daniel Krnak",
+      "email": "dasuos256@gmail.com",
+      "homepage": "https://www.github.com/Dasuos",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1"
+  },
+  "require-dev": {
+    "nette/tester": "^1.7"
+  },
+  "autoload-dev": {
+    "psr-4": {"Dasuos\\Tests\\": "Tests/"}
+  },
+  "autoload": {
+    "psr-4": {"Dasuos\\Mail\\": "Core/"}
+  }
+}
