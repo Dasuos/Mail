@@ -20,7 +20,7 @@ final class EncodedMail implements Mail {
 		);
 	}
 
-	private function subject($content) {
+	private function subject(string $content): string {
 		iconv_set_encoding('internal_encoding', $this->encoding);
 		return substr(
 			iconv_mime_encode('Subject', $content),
