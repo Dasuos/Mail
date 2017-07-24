@@ -4,16 +4,20 @@ namespace Dasuos\Mail;
 
 final class EncodedMail implements Mail {
 
-	private $origin;
-	private $encoding;
+	private const CHARSET = 'utf-8';
+	private const NO_HEADERS = '';
 
-	public function __construct(Mail $origin, string $encoding = 'utf-8') {
+	private $origin;
+
+	public function __construct(Mail $origin) {
 		$this->origin = $origin;
-		$this->encoding = $encoding;
 	}
 
 	public function send(
-		string $to, string $subject, string $message, string $headers = ''
+		string $to,
+		string $subject,
+		string $message,
+		string $headers = self::NO_HEADERS
 	): void {
 		$this->origin->send(
 			$to, $this->subject($subject), $message, $this->headers($headers)
@@ -21,18 +25,18 @@ final class EncodedMail implements Mail {
 	}
 
 	private function subject(string $content): string {
-		iconv_set_encoding('internal_encoding', $this->encoding);
+		iconv_set_encoding('internal_encoding', self::CHARSET);
 		return substr(
 			iconv_mime_encode('Subject', $content),
 			strlen('Subject: ')
 		);
 	}
 
-	private function headers(string $additional = ''): string {
+	private function headers(string $additional = self::NO_HEADERS): string {
 		$headers = implode(
 			PHP_EOL, [
 				'MIME-Version: 1.0',
-				'Content-Type: text/plain: charset=' . $this->encoding,
+				'Content-Type: text/plain: charset=' . self::CHARSET,
 				'Content-Transfer-Encoding: 8bit',
 			]
 		);
