@@ -22,7 +22,7 @@ final class DefinedMail implements Mail {
 		string $headers = self::NO_HEADERS
 	): void {
 		$this->origin->send(
-			$to, $this->subject($subject), $message->content(), $this->headers(
+			$to, $this->subject($subject), $message, $this->headers(
 				$this->from, $message, $headers
 			)
 		);
@@ -47,7 +47,7 @@ final class DefinedMail implements Mail {
 				'Date:' . date('r'),
 				'X-Mailer: PHP/' . phpversion(),
 				'X-Priority: 1',
-				$message->type(self::CHARSET),
+				$message->type(),
 			]
 		);
 		if ($additional)
