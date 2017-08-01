@@ -2,25 +2,29 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
-final class EncodedMail implements Mail {
+final class DefinedMail implements Mail {
 
 	private const CHARSET = 'utf-8';
 	private const NO_HEADERS = '';
 
 	private $origin;
+	private $from;
 
-	public function __construct(Mail $origin) {
+	public function __construct(Mail $origin, string $from) {
 		$this->origin = $origin;
+		$this->from = $from;
 	}
 
 	public function send(
 		string $to,
 		string $subject,
-		string $message,
+		Message $message,
 		string $headers = self::NO_HEADERS
 	): void {
 		$this->origin->send(
-			$to, $this->subject($subject), $message, $this->headers($headers)
+			$to, $this->subject($subject), $message->content(), $this->headers(
+				$this->from, $message, $headers
+			)
 		);
 	}
 
@@ -32,12 +36,18 @@ final class EncodedMail implements Mail {
 		);
 	}
 
-	private function headers(string $additional = self::NO_HEADERS): string {
+	private function headers(
+		string $from, Message $message, string $additional = self::NO_HEADERS
+	): string {
 		$headers = implode(
 			PHP_EOL, [
 				'MIME-Version: 1.0',
-				'Content-Type: text/plain: charset=' . self::CHARSET,
-				'Content-Transfer-Encoding: 8bit',
+				'From: ' . $from,
+				'Return-Path: ' . $from,
+				'Date:' . date('r'),
+				'X-Mailer: PHP/' . phpversion(),
+				'X-Priority: 1',
+				$message->type(self::CHARSET),
 			]
 		);
 		if ($additional)
