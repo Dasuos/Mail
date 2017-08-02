@@ -7,6 +7,6 @@ final class RawMail implements Mail {
 	public function send(
 		string $to, string $subject, string $message, string $headers
 	): void {
-		mail($to, $subject, $message->content(), $headers);
+		mail($to, $subject, $message, $headers);
 	}
 }

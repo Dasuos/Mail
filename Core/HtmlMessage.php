@@ -27,8 +27,13 @@ final class HtmlMessage implements Message {
 	}
 
 	public function content(): string {
-		return $this->text($this->content) . $this->html($this->content) .
-			PHP_EOL . PHP_EOL . '--' . $this->boundary . '--';
+		return implode(
+			PHP_EOL . PHP_EOL, [
+				$this->text($this->content),
+				$this->html($this->content),
+				'--' . $this->boundary . '--'
+			]
+		);
 	}
 
 	private function html(string $content): string {
