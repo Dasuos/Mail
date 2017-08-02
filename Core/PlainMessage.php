@@ -5,11 +5,14 @@ namespace Dasuos\Mail;
 final class PlainMessage implements Message {
 
 	private const CHARSET = 'utf-8';
+	private const NO_FOOTER = '';
 
 	private $content;
 	private $footer;
 
-	public function __construct(string $content, string $footer = '') {
+	public function __construct(
+		string $content, string $footer = self::NO_FOOTER
+	) {
 		$this->content = $content;
 		$this->footer = $footer;
 	}

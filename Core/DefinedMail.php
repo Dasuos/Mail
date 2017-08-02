@@ -8,23 +8,26 @@ final class DefinedMail implements Mail {
 	private const NO_HEADERS = '';
 
 	private $origin;
+	private $message;
 	private $from;
 
-	public function __construct(Mail $origin, string $from) {
+	public function __construct(Mail $origin, Message $message, string $from) {
 		$this->origin = $origin;
+		$this->message = $message;
 		$this->from = $from;
 	}
 
 	public function send(
 		string $to,
 		string $subject,
-		Message $message,
+		string $message,
 		string $headers = self::NO_HEADERS
 	): void {
 		$this->origin->send(
-			$to, $this->subject($subject), $message, $this->headers(
-				$this->from, $message, $headers
-			)
+			$to,
+			$this->subject($subject),
+			$this->message->content(),
+			$this->headers($this->from, $this->message, $headers)
 		);
 	}
 
@@ -44,7 +47,8 @@ final class DefinedMail implements Mail {
 				'MIME-Version: 1.0',
 				'From: ' . $from,
 				'Return-Path: ' . $from,
-				'Date:' . date('r'),
+				'Date: ' . date('r'),
+				'X-Sender: ' . $from,
 				'X-Mailer: PHP/' . phpversion(),
 				'X-Priority: 1',
 				$message->type(),

@@ -15,14 +15,10 @@ final class HtmlMessage implements Message {
 
 	private $content;
 	private $boundary;
-	private $footer;
 
-	public function __construct(
-		string $content, string $boundary, string $footer = ''
-	) {
+	public function __construct(string $content, string $boundary) {
 		$this->content = $content;
 		$this->boundary = $boundary;
-		$this->footer = $footer;
 	}
 
 	public function type(): string {
@@ -32,12 +28,11 @@ final class HtmlMessage implements Message {
 
 	public function content(): string {
 		return $this->text($this->content) . $this->html($this->content) .
-			$this->boundary() . '--';
+			PHP_EOL . PHP_EOL . '--' . $this->boundary . '--';
 	}
 
 	private function html(string $content): string {
-		return $this->boundary() . $this->contentType('html') .
-			$this->contentTransferEncoding() . $content . $this->footer();
+		return $this->headers('html') . $content;
 	}
 
 	private function text(string $content): string {
@@ -49,14 +44,14 @@ final class HtmlMessage implements Message {
 				);
 			}, $content
 		);
-		return $this->boundary() . $this->contentType('html') .
-			$this->contentTransferEncoding() . strip_tags(
+		return $this->headers('plain') . strip_tags(
 				html_entity_decode($text, ENT_QUOTES, self::CHARSET)
-			) . $this->footer();
+			);
 	}
 
-	private function boundary(): string {
-		return PHP_EOL . PHP_EOL . '--' . $this->boundary;
+	private function headers(string $type): string {
+		return '--' . $this->boundary . $this->contentType($type) .
+			$this->contentTransferEncoding();
 	}
 
 	private function contentType(string $type): string {
@@ -67,9 +62,5 @@ final class HtmlMessage implements Message {
 
 	private function contentTransferEncoding(): string {
 		return PHP_EOL . 'Content-Transfer-Encoding: 8bit' . PHP_EOL . PHP_EOL;
-	}
-
-	private function footer():string {
-		return $this->footer ? '-- ' . $this->footer : '';
 	}
 }

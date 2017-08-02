@@ -4,6 +4,6 @@ namespace Dasuos\Mail;
 
 interface Mail {
 	public function send(
-		string $to, string $subject, Message $message, string $headers
+		string $to, string $subject, string $message, string $headers
 	): void;
 }
