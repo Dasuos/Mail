@@ -30,7 +30,7 @@ final class MessageWithAttachment implements Message {
 		$file =  $this->existingPath($path);
 		$name = basename($file);
 		return implode(PHP_EOL, [
-			PHP_EOL .$this->boundary(),
+			PHP_EOL . $this->boundary(),
 			$this->binaryType($name),
 			'Content-Transfer-Encoding: base64',
 			$this->disposition($name) . PHP_EOL,

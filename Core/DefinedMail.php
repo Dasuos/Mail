@@ -5,28 +5,32 @@ namespace Dasuos\Mail;
 final class DefinedMail implements Mail {
 
 	private const CHARSET = 'utf-8';
+	private const PRIORITY_TYPES = [1, 3, 5];
 
-	private $origin;
-	private $message;
 	private $from;
+	private $priority;
 
-	public function __construct(Mail $origin, Message $message, string $from) {
-		$this->origin = $origin;
-		$this->message = $message;
+	public function __construct(string $from, int $priority) {
 		$this->from = $from;
+		$this->priority = $priority;
 	}
 
 	public function send(
 		string $to,
 		string $subject,
-		string $message,
+		Message $message,
 		string $headers = ''
 	): void {
-		$this->origin->send(
+		mail(
 			$to,
 			$this->subject($subject),
-			$this->message->content(),
-			$this->headers($this->from, $this->message->type(), $headers)
+			$message->content(),
+			$this->headers(
+				$this->from,
+				$this->priority($this->priority),
+				$message->type(),
+				$headers
+			)
 		);
 	}
 
@@ -39,7 +43,7 @@ final class DefinedMail implements Mail {
 	}
 
 	private function headers(
-		string $from, string $type, string $additional = ''
+		string $from, int $priority, string $type, string $additional = ''
 	): string {
 		$headers = implode(
 			PHP_EOL, [
@@ -49,12 +53,20 @@ final class DefinedMail implements Mail {
 				'Date: ' . date('r'),
 				'X-Sender: ' . $from,
 				'X-Mailer: PHP/' . phpversion(),
-				'X-Priority: 1',
+				'X-Priority: ' . $priority,
 				$type,
 			]
 		);
 		if ($additional)
 			$headers .= PHP_EOL . $additional;
 		return $headers;
+	}
+
+	private function priority($number): int {
+		if (!in_array($number, self::PRIORITY_TYPES, true))
+			throw new \UnexpectedValueException(
+				'Mail priority type must be either 1, 3 or 5'
+			);
+
 	}
 }
