@@ -6,6 +6,7 @@ final class DefinedMail implements Mail {
 
 	private const CHARSET = 'utf-8';
 	private const PRIORITY_TYPES = [1, 3, 5];
+	private const NO_HEADERS = '';
 
 	private $from;
 	private $priority;
@@ -19,7 +20,7 @@ final class DefinedMail implements Mail {
 		string $to,
 		string $subject,
 		Message $message,
-		string $headers = ''
+		string $headers = self::NO_HEADERS
 	): void {
 		mail(
 			$to,
@@ -43,7 +44,10 @@ final class DefinedMail implements Mail {
 	}
 
 	private function headers(
-		string $from, int $priority, string $type, string $additional = ''
+		string $from,
+		int $priority,
+		string $type,
+		string $additional = self::NO_HEADERS
 	): string {
 		$headers = implode(
 			PHP_EOL, [
