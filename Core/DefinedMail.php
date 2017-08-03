@@ -22,7 +22,7 @@ final class DefinedMail implements Mail {
 		Message $message,
 		string $headers = self::NO_HEADERS
 	): void {
-		mail(
+		if (!@mail(
 			$to,
 			$this->subject($subject),
 			$message->content(),
@@ -32,7 +32,10 @@ final class DefinedMail implements Mail {
 				$message->type(),
 				$headers
 			)
-		);
+		))
+			throw new \UnexpectedValueException(
+				'Mail was not accepted for delivery'
+			);
 	}
 
 	private function subject(string $content): string {
