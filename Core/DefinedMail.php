@@ -5,7 +5,6 @@ namespace Dasuos\Mail;
 final class DefinedMail implements Mail {
 
 	private const CHARSET = 'utf-8';
-	private const NO_HEADERS = '';
 
 	private $origin;
 	private $message;
@@ -21,13 +20,13 @@ final class DefinedMail implements Mail {
 		string $to,
 		string $subject,
 		string $message,
-		string $headers = self::NO_HEADERS
+		string $headers = ''
 	): void {
 		$this->origin->send(
 			$to,
 			$this->subject($subject),
 			$this->message->content(),
-			$this->headers($this->from, $this->message, $headers)
+			$this->headers($this->from, $this->message->type(), $headers)
 		);
 	}
 
@@ -40,7 +39,7 @@ final class DefinedMail implements Mail {
 	}
 
 	private function headers(
-		string $from, Message $message, string $additional = self::NO_HEADERS
+		string $from, string $type, string $additional = ''
 	): string {
 		$headers = implode(
 			PHP_EOL, [
@@ -51,7 +50,7 @@ final class DefinedMail implements Mail {
 				'X-Sender: ' . $from,
 				'X-Mailer: PHP/' . phpversion(),
 				'X-Priority: 1',
-				$message->type(),
+				$type,
 			]
 		);
 		if ($additional)
