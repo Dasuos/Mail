@@ -7,9 +7,7 @@ final class MessageWithAttachment implements Message {
 	private $origin;
 	private $path;
 
-	public function __construct(
-		Message $origin, string $path
-	) {
+	public function __construct(Message $origin, string $path) {
 		$this->origin = $origin;
 		$this->path = $path;
 	}
