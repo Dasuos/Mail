@@ -69,7 +69,7 @@ final class DefinedMail implements Mail {
 		return $headers;
 	}
 
-	private function priority($number): int {
+	private function priority(int $number): int {
 		if (!in_array($number, self::PRIORITY_TYPES, true))
 			throw new \UnexpectedValueException(
 				'Mail priority type must be either 1, 3 or 5'
