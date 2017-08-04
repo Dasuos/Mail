@@ -5,13 +5,14 @@ namespace Dasuos\Mail;
 final class MassMail implements Mail {
 
 	private const NO_HEADERS = '';
+	private const INVISIBLE = false;
 
 	private $origin;
 	private $list;
 	private $visible;
 
 	public function __construct(
-		Mail $origin, array $list, bool $visible = false
+		Mail $origin, array $list, bool $visible = self::INVISIBLE
 	) {
 		$this->origin = $origin;
 		$this->list = $list;
