@@ -2,43 +2,40 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
-use Tester\Runner\PhpInterpreter;
-
 final class MessageWithAttachment implements Message {
 
 	private $origin;
-	private $boundary;
 	private $path;
 
 	public function __construct(
-		Message $origin, string $boundary, string $path
+		Message $origin, string $path
 	) {
 		$this->origin = $origin;
-		$this->boundary = $boundary;
 		$this->path = $path;
 	}
 
 	public function type(): string {
 		return $this->origin->type() . PHP_EOL . sprintf(
-			'Content-Type: multipart/mixed; boundary="%s"', $this->boundary
+			'Content-Type: multipart/mixed; boundary="%s"',
+			$this->boundary($this->path)
 		);
 	}
 
 	public function content(): string {
 		return $this->origin->content() . PHP_EOL . PHP_EOL .
-			$this->attachment($this->path);
+			$this->attachment($this->boundary($this->path), $this->path);
 	}
 
-	private function attachment(string $path): string {
+	private function attachment(string $boundary, string $path): string {
 		$file =  $this->existingPath($path);
 		$name = basename($file);
 		return implode(PHP_EOL, [
-			'--' . $this->boundary,
+			'--' . $boundary,
 			$this->binaryType($name),
 			'Content-Transfer-Encoding: base64',
 			$this->disposition($name) . PHP_EOL,
 			$this->file($file),
-			PHP_EOL . '--' . $this->boundary . '--',
+			PHP_EOL . '--' . $boundary . '--',
 		]);
 	}
 
@@ -62,5 +59,9 @@ final class MessageWithAttachment implements Message {
 
 	private function file(string $path): string {
 		return chunk_split(base64_encode(file_get_contents($path)));
+	}
+
+	private function boundary(string $value): string {
+		return md5($value);
 	}
 }

@@ -12,35 +12,35 @@ final class HtmlMessage implements Message {
 		'~\\s+~u' => ' ',
 		'~<(/?p|/?h\\d|li|dt|br|hr|/tr)[ >/]~i' => '\n\\0',
 	];
+	private const DEFAULT_BOUNDARY_SEED = 'default_seed';
 
 	private $content;
-	private $boundary;
 
-	public function __construct(string $content, string $boundary) {
+	public function __construct(string $content) {
 		$this->content = $content;
-		$this->boundary = $boundary;
 	}
 
 	public function type(): string {
 		return 'Content-Type: multipart/alternative; boundary=' .
-			$this->boundary;
+			$this->boundary();
 	}
 
 	public function content(): string {
+		$boundary = $this->boundary();
 		return implode(
 			PHP_EOL . PHP_EOL, [
-				$this->text($this->content),
-				$this->html($this->content),
-				'--' . $this->boundary . '--'
+				$this->text($boundary, $this->content),
+				$this->html($boundary, $this->content),
+				'--' . $boundary . '--'
 			]
 		);
 	}
 
-	private function html(string $content): string {
-		return $this->headers('html') . $content;
+	private function html(string $boundary, string $content): string {
+		return $this->headers($boundary, 'html') . $content;
 	}
 
-	private function text(string $content): string {
+	private function text(string $boundary, string $content): string {
 		$text = array_reduce(
 			array_keys(self::HTML_REPLACEMENTS),
 			function(string $content, string $pattern): string {
@@ -49,13 +49,13 @@ final class HtmlMessage implements Message {
 				);
 			}, $content
 		);
-		return $this->headers('plain') . strip_tags(
+		return $this->headers($boundary, 'plain') . strip_tags(
 				html_entity_decode($text, ENT_QUOTES, self::CHARSET)
 			);
 	}
 
-	private function headers(string $type): string {
-		return '--' . $this->boundary . $this->contentType($type) .
+	private function headers(string $boundary, string $type): string {
+		return '--' . $boundary . $this->contentType($type) .
 			$this->contentTransferEncoding();
 	}
 
@@ -67,5 +67,11 @@ final class HtmlMessage implements Message {
 
 	private function contentTransferEncoding(): string {
 		return PHP_EOL . 'Content-Transfer-Encoding: 8bit' . PHP_EOL . PHP_EOL;
+	}
+
+	private function boundary(): string {
+		if (strlen($this->content) >= 10)
+			return md5(substr($this->content(), 0, 10));
+		return md5(self::DEFAULT_BOUNDARY_SEED);
 	}
 }
