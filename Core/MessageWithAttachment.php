@@ -22,19 +22,19 @@ final class MessageWithAttachment implements Message {
 	}
 
 	public function content(): string {
+		$path = $this->existingPath($this->path);
 		return $this->origin->content() . PHP_EOL . PHP_EOL .
-			$this->attachment($this->boundary($this->path), $this->path);
+			$this->attachment($this->boundary($path), $path);
 	}
 
 	private function attachment(string $boundary, string $path): string {
-		$file =  $this->existingPath($path);
-		$name = basename($file);
+		$name = basename($path);
 		return implode(PHP_EOL, [
 			'--' . $boundary,
 			$this->binaryType($name),
 			'Content-Transfer-Encoding: base64',
 			$this->disposition($name) . PHP_EOL,
-			$this->file($file),
+			$this->file($path),
 			PHP_EOL . '--' . $boundary . '--',
 		]);
 	}
