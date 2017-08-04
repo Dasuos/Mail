@@ -2,6 +2,8 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
+use Tester\Runner\PhpInterpreter;
+
 final class MessageWithAttachment implements Message {
 
 	private $origin;
@@ -23,19 +25,20 @@ final class MessageWithAttachment implements Message {
 	}
 
 	public function content(): string {
-		return $this->origin->content() . $this->attachment($this->path);
+		return $this->origin->content() . PHP_EOL . PHP_EOL .
+			$this->attachment($this->path);
 	}
 
 	private function attachment(string $path): string {
 		$file =  $this->existingPath($path);
 		$name = basename($file);
 		return implode(PHP_EOL, [
-			PHP_EOL . $this->boundary(),
+			'--' . $this->boundary,
 			$this->binaryType($name),
 			'Content-Transfer-Encoding: base64',
 			$this->disposition($name) . PHP_EOL,
 			$this->file($file),
-			$this->boundary() . '--',
+			PHP_EOL . '--' . $this->boundary . '--',
 		]);
 	}
 
@@ -43,10 +46,6 @@ final class MessageWithAttachment implements Message {
 		if (!file_exists($path))
 			throw new \UnexpectedValueException('Attached file does not exist');
 		return $path;
-	}
-
-	private function boundary() {
-		return PHP_EOL . '--' . $this->boundary;
 	}
 
 	private function binaryType(string $name): string {
