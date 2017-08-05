@@ -74,7 +74,9 @@ final class AssembledMail implements Mail {
 	}
 
 	private function priority(int $priority): int {
-		if (!$this->validPriority($priority))
+		if (!in_array($priority,
+			[self::HIGH_PRIORITY, self::MIDDLE_PRIORITY, self::LOWEST_PRIORITY]
+		))
 			throw new \UnexpectedValueException(
 				sprintf('Allowed mail priority types are: ', implode(
 					', ', [
@@ -85,12 +87,5 @@ final class AssembledMail implements Mail {
 				))
 			);
 		return $priority;
-	}
-
-	private function validPriority(int $number) {
-		return in_array(
-			$number,
-			[self::HIGH_PRIORITY, self::MIDDLE_PRIORITY, self::LOWEST_PRIORITY]
-		);
 	}
 }

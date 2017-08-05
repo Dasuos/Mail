@@ -4,7 +4,6 @@ namespace Dasuos\Mail;
 
 final class HtmlMessage implements Message {
 
-	private const CHARSET = 'utf-8';
 	private const HTML_REPLACEMENTS = [
 		'~<!--.*-->~sU' => '',
 		'~<(script|style|head).*</\\1>~isU' => '',

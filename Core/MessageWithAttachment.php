@@ -56,7 +56,7 @@ final class MessageWithAttachment implements Message {
 
 	private function file(string $path): string {
 		return chunk_split(base64_encode(
-				file_get_contents($this->existingPath($path))
+			file_get_contents($this->existingPath($path))
 		));
 	}
 
