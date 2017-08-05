@@ -6,7 +6,6 @@ final class DefinedMail implements Mail {
 
 	private const CHARSET = 'utf-8';
 	private const PRIORITY_TYPES = [1, 3, 5];
-	private const NO_HEADERS = '';
 
 	private $from;
 	private $priority;

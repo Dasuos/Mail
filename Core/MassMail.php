@@ -4,19 +4,19 @@ namespace Dasuos\Mail;
 
 final class MassMail implements Mail {
 
-	private const NO_HEADERS = '';
-	private const INVISIBLE = false;
+	public const BCC = 'Bcc';
+	public const CC = 'Cc';
 
 	private $origin;
 	private $list;
-	private $visible;
+	private $header;
 
 	public function __construct(
-		Mail $origin, array $list, bool $visible = self::INVISIBLE
+		Mail $origin, array $list, string $header = self::BCC
 	) {
 		$this->origin = $origin;
 		$this->list = $list;
-		$this->visible = $visible;
+		$this->header = $header;
 	}
 
 	public function send(
@@ -25,13 +25,11 @@ final class MassMail implements Mail {
 		Message $message,
 		string $headers = self::NO_HEADERS
 	): void {
-		$headers .= $this->visible ?
-			$this->header('Bcc', $this->list) :
-			$this->header('Cc', $this->list);
+		$headers .= $this->header($this->list);
 		$this->origin->send($to, $subject, $message, $headers);
 	}
 
-	private function header(string $name, array $list): string {
-		return sprintf('%s: %s', $name, implode(',', $list));
+	private function header(array $list): string {
+		return sprintf('%s: %s', $this->header, implode(',', $list));
 	}
 }
