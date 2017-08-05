@@ -13,6 +13,7 @@ final class HtmlMessage implements Message {
 		'~<(/?p|/?h\\d|li|dt|br|hr|/tr)[ >/]~i' => '\n\\0',
 	];
 	private const DEFAULT_BOUNDARY_SEED = 'default_seed';
+	private const BOUNDARY_SEED_LENGTH = 10;
 
 	private $content;
 
@@ -71,8 +72,8 @@ final class HtmlMessage implements Message {
 	}
 
 	private function boundary(): string {
-		if (strlen($this->content) >= 10)
-			return md5(substr($this->content(), 0, 10));
+		if (strlen($this->content) >= self::BOUNDARY_SEED_LENGTH)
+			return md5(substr($this->content(), 0, self::BOUNDARY_SEED_LENGTH));
 		return md5(self::DEFAULT_BOUNDARY_SEED);
 	}
 }
