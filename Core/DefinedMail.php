@@ -61,7 +61,7 @@ final class DefinedMail implements Mail {
 				'X-Sender: ' . $from,
 				'X-Mailer: PHP/' . phpversion(),
 				'X-Priority: ' . $priority,
-				$type,
+				'Content-Type: ' . $type,
 			]
 		);
 		if ($additional)

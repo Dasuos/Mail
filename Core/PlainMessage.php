@@ -18,7 +18,7 @@ final class PlainMessage implements Message {
 	}
 
 	public function type(): string {
-		return 'Content-Type: text/plain; charset=' . self::CHARSET;
+		return 'text/plain; charset=' . self::CHARSET;
 	}
 
 	public function content(): string {

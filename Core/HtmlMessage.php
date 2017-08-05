@@ -21,8 +21,7 @@ final class HtmlMessage implements Message {
 	}
 
 	public function type(): string {
-		return 'Content-Type: multipart/alternative; boundary=' .
-			$this->boundary();
+		return 'multipart/alternative; boundary=' . $this->boundary();
 	}
 
 	public function content(): string {
