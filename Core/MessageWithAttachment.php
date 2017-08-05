@@ -20,9 +20,8 @@ final class MessageWithAttachment implements Message {
 	}
 
 	public function content(): string {
-		$path = $this->existingPath($this->path);
 		return $this->origin->content() . PHP_EOL . PHP_EOL .
-			$this->attachment($this->boundary($path), $path);
+			$this->attachment($this->boundary($this->path), $this->path);
 	}
 
 	private function attachment(string $boundary, string $path): string {
@@ -56,7 +55,9 @@ final class MessageWithAttachment implements Message {
 	}
 
 	private function file(string $path): string {
-		return chunk_split(base64_encode(file_get_contents($path)));
+		return chunk_split(base64_encode(
+				file_get_contents($this->existingPath($path))
+		));
 	}
 
 	private function boundary(string $value): string {
