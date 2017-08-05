@@ -40,16 +40,18 @@ final class HtmlMessage implements Message {
 	}
 
 	private function text(string $boundary, string $content): string {
-		$text = array_reduce(
-			array_keys(self::HTML_REPLACEMENTS),
-			function(string $content, string $pattern): string {
-				return preg_replace(
-					$pattern, self::HTML_REPLACEMENTS[$pattern], $content
-				);
-			}, $content
-		);
-		return $this->headers($boundary, 'plain') . strip_tags(
-				html_entity_decode($text, ENT_QUOTES, self::CHARSET)
+		return $this->headers($boundary, 'plain') .
+			strip_tags(html_entity_decode(
+				array_reduce(
+					array_keys(self::HTML_REPLACEMENTS),
+					function(string $content, string $pattern): string {
+						return preg_replace(
+							$pattern,
+							self::HTML_REPLACEMENTS[$pattern],
+							$content
+						);
+					}, $content
+				), ENT_QUOTES, self::CHARSET)
 			);
 	}
 
