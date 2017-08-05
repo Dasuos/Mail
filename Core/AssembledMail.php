@@ -2,15 +2,20 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
-final class DefinedMail implements Mail {
+final class AssembledMail implements Mail {
+
+	public const HIGH_PRIORITY = 1;
+	public const MIDDLE_PRIORITY = 3;
+	public const LOWEST_PRIORITY = 5;
 
 	private const CHARSET = 'utf-8';
-	private const PRIORITY_TYPES = [1, 3, 5];
 
 	private $from;
 	private $priority;
 
-	public function __construct(string $from, int $priority) {
+	public function __construct(
+		string $from, int $priority = self::HIGH_PRIORITY
+	) {
 		$this->from = $from;
 		$this->priority = $priority;
 	}
@@ -68,11 +73,24 @@ final class DefinedMail implements Mail {
 		return $headers;
 	}
 
-	private function priority(int $number): int {
-		if (!in_array($number, self::PRIORITY_TYPES, true))
+	private function priority(int $priority): int {
+		if (!$this->validPriority($priority))
 			throw new \UnexpectedValueException(
-				'Mail priority type must be either 1, 3 or 5'
+				sprintf('Allowed mail priority types are: ', implode(
+					', ', [
+						self::HIGH_PRIORITY,
+						self::MIDDLE_PRIORITY,
+						self::LOWEST_PRIORITY
+					]
+				))
 			);
+		return $priority;
+	}
 
+	private function validPriority(int $number) {
+		return in_array(
+			$number,
+			[self::HIGH_PRIORITY, self::MIDDLE_PRIORITY, self::LOWEST_PRIORITY]
+		);
 	}
 }

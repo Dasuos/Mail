@@ -13,7 +13,7 @@ final class HtmlMessage implements Message {
 		'~<(/?p|/?h\\d|li|dt|br|hr|/tr)[ >/]~i' => '\n\\0',
 	];
 	private const DEFAULT_BOUNDARY_SEED = 'default_seed';
-	private const BOUNDARY_SEED_LENGTH = 10;
+	private const BOUNDARY_SEED_LENGTH = 15;
 
 	private $content;
 
