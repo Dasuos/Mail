@@ -23,17 +23,18 @@ final class MassMail implements Mail {
 		string $to,
 		string $subject,
 		Message $message,
-		string $headers = self::NO_HEADERS
+		array $headers = self::NO_HEADERS
 	): void {
-		$headers .= $this->header($this->header, $this->list);
-		$this->origin->send($to, $subject, $message, $headers);
+		$this->origin->send(
+			$to, $subject, $message, $this->header($this->header, $this->list)
+		);
 	}
 
-	private function header(string $header, array $list): string {
+	private function header(string $header, array $list): array {
 		if (!in_array($header, [self::BCC, self::CC]))
 			throw new \UnexpectedValueException(
 				'Only Bcc anc Cc headers are allowed'
 			);
-		return sprintf('%s: %s', $header, implode(',', $list));
+		return [sprintf('%s: %s', $header, implode(',', $list))];
 	}
 }

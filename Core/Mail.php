@@ -4,9 +4,9 @@ namespace Dasuos\Mail;
 
 interface Mail {
 
-	const NO_HEADERS = '';
+	const NO_HEADERS = [];
 
 	public function send(
-		string $to, string $subject, Message $message, string $headers
+		string $to, string $subject, Message $message, array $headers
 	): void;
 }

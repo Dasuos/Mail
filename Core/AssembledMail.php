@@ -24,7 +24,7 @@ final class AssembledMail implements Mail {
 		string $to,
 		string $subject,
 		Message $message,
-		string $headers = self::NO_HEADERS
+		array $extensions = self::NO_HEADERS
 	): void {
 		if (!@mail(
 			$to,
@@ -34,7 +34,7 @@ final class AssembledMail implements Mail {
 				$this->from,
 				$this->priority($this->priority),
 				$message->type(),
-				$headers
+				$extensions
 			)
 		))
 			throw new \UnexpectedValueException(
@@ -54,23 +54,22 @@ final class AssembledMail implements Mail {
 		string $from,
 		int $priority,
 		string $type,
-		string $additional = self::NO_HEADERS
+		array $extensions = self::NO_HEADERS
 	): string {
-		$headers = implode(
-			PHP_EOL, [
-				'MIME-Version: 1.0',
-				'From: ' . $from,
-				'Return-Path: ' . $from,
-				'Date: ' . date('r'),
-				'X-Sender: ' . $from,
-				'X-Mailer: PHP/' . phpversion(),
-				'X-Priority: ' . $priority,
-				'Content-Type: ' . $type,
-			]
+		$headers = [
+			'MIME-Version: 1.0',
+			'From: ' . $from,
+			'Return-Path: ' . $from,
+			'Date: ' . date('r'),
+			'X-Sender: ' . $from,
+			'X-Mailer: PHP/' . phpversion(),
+			'X-Priority: ' . $priority,
+			'Content-Type: ' . $type,
+		];
+		return implode(
+			PHP_EOL,
+			$extensions ? array_merge($headers, $extensions) : $headers
 		);
-		if ($additional)
-			$headers .= PHP_EOL . $additional;
-		return $headers;
 	}
 
 	private function priority(int $priority): int {
