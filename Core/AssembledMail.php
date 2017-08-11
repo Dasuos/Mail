@@ -4,9 +4,9 @@ namespace Dasuos\Mail;
 
 final class AssembledMail implements Mail {
 
-	public const HIGH_PRIORITY = 1;
-	public const MIDDLE_PRIORITY = 3;
-	public const LOWEST_PRIORITY = 5;
+	public const HIGH_PRIORITY = 1,
+		MIDDLE_PRIORITY = 3,
+		LOWEST_PRIORITY = 5;
 
 	private const CHARSET = 'utf-8';
 
