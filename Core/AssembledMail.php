@@ -64,11 +64,10 @@ final class AssembledMail implements Mail {
 			'X-Sender: ' . $from,
 			'X-Mailer: PHP/' . phpversion(),
 			'X-Priority: ' . $priority,
-			'Content-Type: ' . $type,
+			'Content-Type: ' . $type
 		];
 		return implode(
-			PHP_EOL,
-			$extensions ? array_merge($headers, $extensions) : $headers
+			PHP_EOL, $extensions ? array_merge($headers, $extensions) : $headers
 		);
 	}
 

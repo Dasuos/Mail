@@ -17,7 +17,8 @@ final class PlainMessage implements Message {
 	}
 
 	public function type(): string {
-		return 'text/plain; charset=' . self::CHARSET;
+		return 'text/plain; charset=' . self::CHARSET . PHP_EOL .
+			'Content-Transfer-Encoding: 8bit';
 	}
 
 	public function content(): string {

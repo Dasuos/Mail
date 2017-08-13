@@ -21,53 +21,50 @@ final class HtmlMessage implements Message {
 	}
 
 	public function type(): string {
-		return 'multipart/alternative; boundary=' . $this->boundary();
+		return sprintf(
+			'multipart/alternative; boundary="%s"', $this->boundary()
+		);
 	}
 
 	public function content(): string {
 		$boundary = $this->boundary();
 		return implode(
-			PHP_EOL . PHP_EOL, [
-				$this->text($boundary, $this->content),
-				$this->html($boundary, $this->content),
-				'--' . $boundary . '--'
-			]
-		);
-	}
-
-	private function html(string $boundary, string $content): string {
-		return $this->headers($boundary, 'html') . $content;
-	}
-
-	private function text(string $boundary, string $content): string {
-		return $this->headers($boundary, 'plain') .
-			strip_tags(html_entity_decode(
-				array_reduce(
-					array_keys(self::HTML_REPLACEMENTS),
-					function(string $content, string $pattern): string {
-						return preg_replace(
-							$pattern,
-							self::HTML_REPLACEMENTS[$pattern],
-							$content
-						);
-					}, $content
-				), ENT_QUOTES, self::CHARSET)
+				PHP_EOL . PHP_EOL, [
+					$this->text($boundary, $this->content),
+					$this->html($boundary, $this->content),
+					'--' . $boundary . '--'
+				]
 			);
 	}
 
-	private function headers(string $boundary, string $type): string {
-		return '--' . $boundary . $this->contentType($type) .
-			$this->contentTransferEncoding();
+	private function text(string $boundary, string $content): string {
+		return $this->boundHeaders($boundary, 'plain') .
+			strip_tags(
+				html_entity_decode(
+					array_reduce(
+						array_keys(self::HTML_REPLACEMENTS),
+						function(string $content, string $pattern): string {
+							return preg_replace(
+								$pattern,
+								self::HTML_REPLACEMENTS[$pattern],
+								$content
+							);
+						}, $content
+					), ENT_QUOTES, self::CHARSET
+				)
+			);
 	}
 
-	private function contentType(string $type): string {
-		return PHP_EOL . sprintf(
-			'Content-Type: text/%s; charset=%s', $type, self::CHARSET
-		);
+	private function html(string $boundary, string $content): string {
+		return $this->boundHeaders($boundary, 'html') . $content;
 	}
 
-	private function contentTransferEncoding(): string {
-		return PHP_EOL . 'Content-Transfer-Encoding: 8bit' . PHP_EOL . PHP_EOL;
+	private function boundHeaders(string $boundary, string $type): string {
+		return implode(PHP_EOL, [
+			'--' . $boundary,
+			sprintf('Content-Type: text/%s; charset=%s', $type, self::CHARSET),
+			'Content-Transfer-Encoding: 8bit'
+		]) . PHP_EOL . PHP_EOL;
 	}
 
 	private function boundary(): string {
