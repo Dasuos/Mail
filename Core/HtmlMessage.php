@@ -38,7 +38,7 @@ final class HtmlMessage implements Message {
 	}
 
 	private function text(string $boundary, string $content): string {
-		return $this->boundHeaders($boundary, 'plain') .
+		return $this->headers($boundary, 'plain') .
 			strip_tags(
 				html_entity_decode(
 					array_reduce(
@@ -56,10 +56,10 @@ final class HtmlMessage implements Message {
 	}
 
 	private function html(string $boundary, string $content): string {
-		return $this->boundHeaders($boundary, 'html') . $content;
+		return $this->headers($boundary, 'html') . $content;
 	}
 
-	private function boundHeaders(string $boundary, string $type): string {
+	private function headers(string $boundary, string $type): string {
 		return implode(PHP_EOL, [
 			'--' . $boundary,
 			sprintf('Content-Type: text/%s; charset=%s', $type, self::CHARSET),
