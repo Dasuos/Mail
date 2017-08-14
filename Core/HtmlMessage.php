@@ -11,8 +11,7 @@ final class HtmlMessage implements Message {
 		'~\\s+~u' => ' ',
 		'~<(/?p|/?h\\d|li|dt|br|hr|/tr)[ >/]~i' => '\n\\0',
 	];
-	private const DEFAULT_BOUNDARY_SEED = 'default_seed';
-	private const BOUNDARY_SEED_LENGTH = 15;
+	private const BOUNDARY_SEED_LENGTH = 10;
 
 	private $content;
 
@@ -29,12 +28,12 @@ final class HtmlMessage implements Message {
 	public function content(): string {
 		$boundary = $this->boundary();
 		return implode(
-				PHP_EOL . PHP_EOL, [
-					$this->text($boundary, $this->content),
-					$this->html($boundary, $this->content),
-					'--' . $boundary . '--'
-				]
-			);
+			PHP_EOL . PHP_EOL, [
+				$this->text($boundary, $this->content),
+				$this->html($boundary, $this->content),
+				'--' . $boundary . '--'
+			]
+		);
 	}
 
 	private function text(string $boundary, string $content): string {
@@ -63,13 +62,16 @@ final class HtmlMessage implements Message {
 		return implode(PHP_EOL, [
 			'--' . $boundary,
 			sprintf('Content-Type: text/%s; charset=%s', $type, self::CHARSET),
-			'Content-Transfer-Encoding: 8bit'
+			'Content-Transfer-Encoding: 7bit'
 		]) . PHP_EOL . PHP_EOL;
 	}
 
 	private function boundary(): string {
-		if (strlen($this->content) >= self::BOUNDARY_SEED_LENGTH)
-			return md5(substr($this->content(), 0, self::BOUNDARY_SEED_LENGTH));
-		return md5(self::DEFAULT_BOUNDARY_SEED);
+		if (strlen(trim($this->content)) >= self::BOUNDARY_SEED_LENGTH)
+			throw new \UnexpectedValueException(
+				'Mail message must have at least 10 characters 
+				to generate encapsulation boundary'
+			);
+		return md5(substr($this->content, 0, self::BOUNDARY_SEED_LENGTH));
 	}
 }
