@@ -8,8 +8,6 @@ final class AssembledMail implements Mail {
 		MIDDLE_PRIORITY = 3,
 		LOWEST_PRIORITY = 5;
 
-	private const CHARSET = 'utf-8';
-
 	private $from;
 	private $priority;
 
@@ -42,12 +40,8 @@ final class AssembledMail implements Mail {
 			);
 	}
 
-	private function subject(string $content): string {
-		iconv_set_encoding('internal_encoding', self::CHARSET);
-		return substr(
-			iconv_mime_encode('Subject', $content),
-			strlen('Subject: ')
-		);
+	private function subject(string $subject): string {
+		return '=?UTF-8?Q?' . imap_8bit($subject) . '?=';
 	}
 
 	private function headers(
