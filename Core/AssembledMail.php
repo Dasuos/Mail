@@ -31,7 +31,7 @@ final class AssembledMail implements Mail {
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
-				$message->type(),
+				$message,
 				$extensions
 			)
 		))
@@ -47,7 +47,7 @@ final class AssembledMail implements Mail {
 	private function headers(
 		string $from,
 		int $priority,
-		string $type,
+		Message $message,
 		array $extensions = self::NO_HEADERS
 	): string {
 		$headers = [
@@ -58,7 +58,7 @@ final class AssembledMail implements Mail {
 			'X-Sender: ' . $from,
 			'X-Mailer: PHP/' . phpversion(),
 			'X-Priority: ' . $priority,
-			'Content-Type: ' . $type
+			$message->headers()
 		];
 		return implode(
 			PHP_EOL, $extensions ? array_merge($headers, $extensions) : $headers

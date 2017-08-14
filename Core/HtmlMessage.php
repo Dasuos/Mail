@@ -19,9 +19,10 @@ final class HtmlMessage implements Message {
 		$this->content = $content;
 	}
 
-	public function type(): string {
+	public function headers(): string {
 		return sprintf(
-			'multipart/alternative; boundary="%s"', $this->boundary()
+			'Content-Type: multipart/alternative; boundary="%s"',
+			$this->boundary()
 		);
 	}
 
@@ -37,7 +38,7 @@ final class HtmlMessage implements Message {
 	}
 
 	private function text(string $boundary, string $content): string {
-		return $this->headers($boundary, 'plain') .
+		return $this->boundHeaders($boundary, 'plain') .
 			strip_tags(
 				html_entity_decode(
 					array_reduce(
@@ -55,10 +56,10 @@ final class HtmlMessage implements Message {
 	}
 
 	private function html(string $boundary, string $content): string {
-		return $this->headers($boundary, 'html') . $content;
+		return $this->boundHeaders($boundary, 'html') . $content;
 	}
 
-	private function headers(string $boundary, string $type): string {
+	private function boundHeaders(string $boundary, string $type): string {
 		return implode(PHP_EOL, [
 			'--' . $boundary,
 			sprintf('Content-Type: text/%s; charset=%s', $type, self::CHARSET),

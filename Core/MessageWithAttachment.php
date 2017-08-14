@@ -12,14 +12,17 @@ final class MessageWithAttachment implements Message {
 		$this->path = $path;
 	}
 
-	public function type(): string {
-		return sprintf('multipart/mixed; boundary="%s"', $this->boundary());
+	public function headers(): string {
+		return sprintf(
+			'Content-Type: multipart/mixed; boundary="%s"',
+			$this->boundary()
+		);
 	}
 
 	public function content(): string {
 		$boundary = $this->boundary();
 		return implode(PHP_EOL . PHP_EOL, [
-			'--' . $boundary . PHP_EOL . 'Content-Type: ' . $this->origin->type(),
+			'--' . $boundary . PHP_EOL . $this->origin->headers(),
 			$this->origin->content(),
 			$this->attachment($boundary, $this->path)
 		]);
