@@ -67,7 +67,7 @@ final class HtmlMessage implements Message {
 	}
 
 	private function boundary(): string {
-		if (strlen(trim($this->content)) >= self::BOUNDARY_SEED_LENGTH)
+		if (strlen(trim($this->content)) < self::BOUNDARY_SEED_LENGTH)
 			throw new \UnexpectedValueException(
 				'Mail message must have at least 10 characters 
 				to generate encapsulation boundary'
