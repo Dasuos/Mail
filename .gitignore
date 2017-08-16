@@ -1,4 +1,4 @@
 vendor
 example.php
 composer.lock
-Tests/Temp/*
+Tests/Unit/output
