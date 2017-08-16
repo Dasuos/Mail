@@ -12,7 +12,7 @@ require __DIR__ . '/../bootstrap.php';
 
 class HtmlMessage extends \Tester\TestCase {
 
-	public function testReturningMixedContentType() {
+	public function testReturningAlternativeContentType() {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::equal(
 			sprintf(
