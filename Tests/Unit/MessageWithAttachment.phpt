@@ -56,6 +56,19 @@ class MessageWithAttachment extends \Tester\TestCase {
 			)
 		);
 	}
+
+	public function testReturningContentWithLessThanTenCharacters() {
+		Assert::exception(
+			function() {
+				(new Mail\MessageWithAttachment(
+					new Mail\FakeMessage(
+						'content',
+						'headers'
+					), 'nonexistent/path'
+				))->content();
+			}, \UnexpectedValueException::class
+		);
+	}
 }
 
 (new MessageWithAttachment())->run();

@@ -53,8 +53,6 @@ class HtmlMessage extends \Tester\TestCase {
 			)
 		);
 	}
-
-
 }
 
 (new HtmlMessage())->run();
