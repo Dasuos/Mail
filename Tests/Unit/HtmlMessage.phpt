@@ -15,10 +15,8 @@ class HtmlMessage extends \Tester\TestCase {
 	public function testReturningAlternativeContentType() {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::equal(
-			sprintf(
-				'Content-Type: multipart/alternative; boundary="%s"',
-				md5(substr($content, 0, 10))
-			), (new Mail\HtmlMessage($content))->headers()
+			'Content-Type: multipart/alternative; boundary="df5eb714b4d4a1bc3f705b74fcbdd0ee"',
+			(new Mail\HtmlMessage($content))->headers()
 		);
 	}
 

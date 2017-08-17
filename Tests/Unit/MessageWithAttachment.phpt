@@ -15,14 +15,11 @@ class MessageWithAttachment extends \Tester\TestCase {
 	public function testReturningMixedContentType() {
 		$path = __DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt';
 		Assert::equal(
-			sprintf(
-				'Content-Type: multipart/mixed; boundary="%s"',
-				md5($path)
-			), (new Mail\MessageWithAttachment(
-				new Mail\FakeMessage(
-					'content',
-					'headers'
-				), $path))->headers()
+			'Content-Type: multipart/mixed; boundary="9fd357b3508c77710bf76d322a72fe1c"',
+			(new Mail\MessageWithAttachment(
+				new Mail\FakeMessage('content', 'headers'),
+				$path
+			))->headers()
 		);
 	}
 
@@ -57,7 +54,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 		);
 	}
 
-	public function testReturningContentWithLessThanTenCharacters() {
+	public function testReturningContentWithNonexistentAttachment() {
 		Assert::exception(
 			function() {
 				(new Mail\MessageWithAttachment(
@@ -66,7 +63,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 						'headers'
 					), 'nonexistent/path'
 				))->content();
-			}, \UnexpectedValueException::class
+			},
+			\UnexpectedValueException::class,
+			'Attached file does not exist'
 		);
 	}
 }
