@@ -4,12 +4,17 @@ namespace Dasuos\Mail;
 
 final class MessageWithAttachment implements Message {
 
+	private const EMPTY = '';
+
 	private $origin;
 	private $path;
+	private $boundary;
 
-	public function __construct(Message $origin, string $path) {
+	public function __construct(
+		Message $origin, string $path, string $boundary = self::EMPTY) {
 		$this->origin = $origin;
 		$this->path = $path;
+		$this->boundary = $boundary;
 	}
 
 	public function headers(): string {
@@ -53,6 +58,6 @@ final class MessageWithAttachment implements Message {
 	}
 
 	private function boundary(): string {
-		return md5($this->path);
+		return md5($this->boundary ? $this->boundary : $this->path);
 	}
 }

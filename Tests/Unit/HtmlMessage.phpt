@@ -15,9 +15,9 @@ class HtmlMessage extends \Tester\TestCase {
 	public function testReturningAlternativeContentType() {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::equal(
-			'Content-Type: multipart/alternative; boundary="df5eb714b4d4a1bc3f705b74fcbdd0ee"',
+			'Content-Type: multipart/alternative; boundary="81fd830c85363675edb98d2879916d8c"',
 			(new Mail\HtmlMessage(
-				$content, 'df5eb714b4d4a1bc3f705b74fcbdd0ee'
+				$content, 'boundary'
 			))->headers()
 		);
 	}
@@ -26,23 +26,23 @@ class HtmlMessage extends \Tester\TestCase {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::same(
 			preg_replace('/\s+/', ' ',
-				'--df5eb714b4d4a1bc3f705b74fcbdd0ee 
+				'--81fd830c85363675edb98d2879916d8c 
 				Content-Type: text/plain; charset=utf-8 
 				Content-Transfer-Encoding: 7bit 
 
 				\nFoo\n\nBar\n 
 
-				--df5eb714b4d4a1bc3f705b74fcbdd0ee 
+				--81fd830c85363675edb98d2879916d8c 
 				Content-Type: text/html; charset=utf-8 
 				Content-Transfer-Encoding: 7bit 
 				
 				<h1>Foo</h1><p>Bar</p> 
 
-				--df5eb714b4d4a1bc3f705b74fcbdd0ee--'
+				--81fd830c85363675edb98d2879916d8c--'
 			),
 			preg_replace('/\s+/', ' ',
 				(new Mail\HtmlMessage(
-					$content, 'df5eb714b4d4a1bc3f705b74fcbdd0ee'
+					$content, 'boundary'
 				))->content()
 			)
 		);

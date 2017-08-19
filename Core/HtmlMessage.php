@@ -73,7 +73,7 @@ final class HtmlMessage implements Message {
 
 	private function boundary(): string {
 		if (!$this->boundary)
-			$this->boundary = bin2hex(random_bytes(10));
-		return $this->boundary;
+			$this->boundary = bin2hex(random_bytes(5));
+		return md5($this->boundary);
 	}
 }
