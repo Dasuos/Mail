@@ -4,7 +4,7 @@ namespace Dasuos\Mail;
 
 final class HtmlMessage implements Message {
 
-	private const EMPTY = '';
+	private const EMPTY_BOUNDARY = '';
 	private const HTML_REPLACEMENTS = [
 		'~<!--.*-->~sU' => '',
 		'~<(script|style|head).*</\\1>~isU' => '',
@@ -17,7 +17,7 @@ final class HtmlMessage implements Message {
 	private $boundary;
 
 	public function __construct(
-		string $content, string $boundary = self::EMPTY
+		string $content, string $boundary = self::EMPTY_BOUNDARY
 	) {
 		$this->content = $content;
 		$this->boundary = $boundary;
@@ -72,8 +72,6 @@ final class HtmlMessage implements Message {
 	}
 
 	private function boundary(): string {
-		if (!$this->boundary)
-			$this->boundary = bin2hex(random_bytes(5));
-		return md5($this->boundary);
+		return (new EncapsulationBoundary($this->boundary))->hash();
 	}
 }

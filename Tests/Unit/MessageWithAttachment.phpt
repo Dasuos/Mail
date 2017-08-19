@@ -24,7 +24,6 @@ class MessageWithAttachment extends \Tester\TestCase {
 	}
 
 	public function testReturningPlainTextWithAttachment() {
-		$path = __DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt';
 		Assert::same(
 			preg_replace('/\s+/', ' ',
 				'--81fd830c85363675edb98d2879916d8c
@@ -48,7 +47,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 						'content',
 						'Content-Type: text/plain; charset=utf-8' . PHP_EOL .
 						'Content-Transfer-Encoding: 7bit'
-					), $path, 'boundary'
+					),
+					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt',
+					'boundary'
 				))->content()
 			)
 		);
