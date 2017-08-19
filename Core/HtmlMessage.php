@@ -4,6 +4,7 @@ namespace Dasuos\Mail;
 
 final class HtmlMessage implements Message {
 
+	private const EMPTY = '';
 	private const HTML_REPLACEMENTS = [
 		'~<!--.*-->~sU' => '',
 		'~<(script|style|head).*</\\1>~isU' => '',
@@ -11,12 +12,15 @@ final class HtmlMessage implements Message {
 		'~\\s+~u' => ' ',
 		'~<(/?p|/?h\\d|li|dt|br|hr|/tr)[ >/]~i' => '\n\\0',
 	];
-	private const BOUNDARY_SEED_LENGTH = 10;
 
 	private $content;
+	private $boundary;
 
-	public function __construct(string $content) {
+	public function __construct(
+		string $content, string $boundary = self::EMPTY
+	) {
 		$this->content = $content;
+		$this->boundary = $boundary;
 	}
 
 	public function headers(): string {
@@ -68,11 +72,8 @@ final class HtmlMessage implements Message {
 	}
 
 	private function boundary(): string {
-		if (strlen(trim($this->content)) < self::BOUNDARY_SEED_LENGTH)
-			throw new \UnexpectedValueException(
-				'Mail message must have at least 10 characters 
-				to generate encapsulation boundary'
-			);
-		return md5(substr($this->content, 0, self::BOUNDARY_SEED_LENGTH));
+		if (!$this->boundary)
+			$this->boundary = bin2hex(random_bytes(10));
+		return $this->boundary;
 	}
 }

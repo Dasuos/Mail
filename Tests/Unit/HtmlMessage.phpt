@@ -16,15 +16,9 @@ class HtmlMessage extends \Tester\TestCase {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::equal(
 			'Content-Type: multipart/alternative; boundary="df5eb714b4d4a1bc3f705b74fcbdd0ee"',
-			(new Mail\HtmlMessage($content))->headers()
-		);
-	}
-
-	public function testReturningContentWithLessThanTenCharacters() {
-		Assert::exception(
-			function() {
-				(new Mail\HtmlMessage('foo bar'))->content();
-			}, \UnexpectedValueException::class
+			(new Mail\HtmlMessage(
+				$content, 'df5eb714b4d4a1bc3f705b74fcbdd0ee'
+			))->headers()
 		);
 	}
 
@@ -47,7 +41,9 @@ class HtmlMessage extends \Tester\TestCase {
 				--df5eb714b4d4a1bc3f705b74fcbdd0ee--'
 			),
 			preg_replace('/\s+/', ' ',
-				(new Mail\HtmlMessage($content))->content()
+				(new Mail\HtmlMessage(
+					$content, 'df5eb714b4d4a1bc3f705b74fcbdd0ee'
+				))->content()
 			)
 		);
 	}
