@@ -14,7 +14,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningMixedContentType() {
 		$path = __DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt';
-		Assert::equal(
+		Assert::same(
 			'Content-Type: multipart/mixed; boundary="81fd830c85363675edb98d2879916d8c"',
 			(new Mail\MessageWithAttachment(
 				new Mail\FakeMessage('content', 'headers'),
@@ -23,7 +23,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 		);
 	}
 
-	public function testReturningContentWithAttachment() {
+	public function testReturningPlainTextWithAttachment() {
 		$path = __DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt';
 		Assert::same(
 			preg_replace('/\s+/', ' ',
@@ -54,7 +54,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 		);
 	}
 
-	public function testReturningContentWithNonexistentAttachment() {
+	public function testThrowingNonexistentAttachmentException() {
 		Assert::exception(
 			function() {
 				(new Mail\MessageWithAttachment(

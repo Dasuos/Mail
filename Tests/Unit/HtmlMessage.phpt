@@ -14,7 +14,7 @@ class HtmlMessage extends \Tester\TestCase {
 
 	public function testReturningAlternativeContentType() {
 		$content = '<h1>Foo</h1><p>Bar</p>';
-		Assert::equal(
+		Assert::same(
 			'Content-Type: multipart/alternative; boundary="81fd830c85363675edb98d2879916d8c"',
 			(new Mail\HtmlMessage(
 				$content, 'boundary'
@@ -22,7 +22,7 @@ class HtmlMessage extends \Tester\TestCase {
 		);
 	}
 
-	public function testReturningContent() {
+	public function testReturningPlainTextAndHtml() {
 		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::same(
 			preg_replace('/\s+/', ' ',

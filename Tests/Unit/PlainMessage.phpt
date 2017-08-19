@@ -13,22 +13,22 @@ require __DIR__ . '/../bootstrap.php';
 class PlainMessage extends \Tester\TestCase {
 
 	public function testReturningContentType() {
-		Assert::equal(
+		Assert::same(
 			'Content-Type: text/plain; charset=utf-8'
 			. PHP_EOL . 'Content-Transfer-Encoding: 7bit',
 			(new Mail\PlainMessage('foo bar'))->headers()
 		);
 	}
 
-	public function testReturningContent() {
-		Assert::equal(
+	public function testReturningPlainText() {
+		Assert::same(
 			'foo bar',
 			(new Mail\PlainMessage('foo bar'))->content()
 		);
 	}
 
-	public function testReturningContentWithFooter() {
-		Assert::equal(
+	public function testReturningPlainTextWithFooter() {
+		Assert::same(
 			'foo bar-- signature',
 			(new Mail\PlainMessage('foo bar', 'signature'))->content()
 		);
