@@ -11,23 +11,24 @@ final class MessageWithAttachment implements Message {
 	public function __construct(Message $origin, string $path) {
 		$this->origin = $origin;
 		$this->path = $path;
+		$this->boundary = new CachedBoundary(new RandomBoundary());
 	}
 
 	public function headers(): array {
 		return [
 			'Content-Type' => sprintf(
-				'multipart/mixed; boundary="%s"', $this->boundary()
+				'multipart/mixed; boundary="%s"', $this->boundary->hash()
 			)
 		];
 	}
 
 	public function content(): string {
-		$boundary = $this->boundary();
+		$boundary = $this->boundary->hash();
 		return implode(PHP_EOL . PHP_EOL, [
 			'--' . $boundary . PHP_EOL .
 			implode(
 				PHP_EOL, array_map(
-					function ($value, $header) {
+					function (string $value, string $header): string {
 						return sprintf('%s: %s', $header, $value);
 					},
 					$this->origin->headers(),
@@ -61,11 +62,5 @@ final class MessageWithAttachment implements Message {
 		return chunk_split(base64_encode(
 			file_get_contents($this->existingPath($path))
 		));
-	}
-
-	private function boundary(): string {
-		if (!$this->boundary)
-			$this->boundary = bin2hex(random_bytes(10));
-		return md5($this->boundary);
 	}
 }

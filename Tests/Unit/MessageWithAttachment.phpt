@@ -17,10 +17,10 @@ class MessageWithAttachment extends \Tester\TestCase {
 			['Content-Type' => preg_replace(
 				'~"[0-9a-z]*"~',
 				'""',
-				'multipart/mixed; boundary="81fd830c85363675edb98d2879916d8c"'
+				'multipart/mixed; boundary="random"'
 			)],
 			array_map(
-				function($value) {
+				function(string $value): string {
 					return preg_replace('~"[0-9a-z]*"~', '""', $value);
 				},
 				(new Mail\MessageWithAttachment(
@@ -34,35 +34,37 @@ class MessageWithAttachment extends \Tester\TestCase {
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
 			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-			preg_replace('/\s+/', ' ',
-				'--81fd830c85363675edb98d2879916d8c
-				Content-Type: text/plain; charset=utf-8 
-				Content-Transfer-Encoding: 7bit 
-			
-				content 
-			
-				--81fd830c85363675edb98d2879916d8c 
-				Content-Type: application/octet-stream; name="attachment.txt" 
-				Content-Transfer-Encoding: base64 
-				Content-Disposition: attachment; filename="attachment.txt" 
-			
-				dGVzdGluZyBjb250ZW50 
-			
-				--81fd830c85363675edb98d2879916d8c--'
-			)),
+				preg_replace('/\s+/', ' ',
+					'--boundary
+					Content-Type: text/plain; charset=utf-8 
+					Content-Transfer-Encoding: 7bit 
+				
+					content 
+				
+					--boundary 
+					Content-Type: application/octet-stream; name="attachment.txt" 
+					Content-Transfer-Encoding: base64 
+					Content-Disposition: attachment; filename="attachment.txt" 
+				
+					dGVzdGluZyBjb250ZW50 
+				
+					--boundary--'
+				)
+			),
 			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-			preg_replace('/\s+/', ' ',
-				(new Mail\MessageWithAttachment(
-					new Mail\FakeMessage(
-						'content',
-						[
-							'Content-Type' => 'text/plain; charset=utf-8',
-							'Content-Transfer-Encoding' => '7bit'
-						]
-					),
-					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
-				))->content()
-			))
+				preg_replace('/\s+/', ' ',
+					(new Mail\MessageWithAttachment(
+						new Mail\FakeMessage(
+							'content',
+							[
+								'Content-Type' => 'text/plain; charset=utf-8',
+								'Content-Transfer-Encoding' => '7bit'
+							]
+						),
+						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+					))->content()
+				)
+			)
 		);
 	}
 

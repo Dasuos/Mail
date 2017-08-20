@@ -17,18 +17,19 @@ final class HtmlMessage implements Message {
 
 	public function __construct(string $content) {
 		$this->content = $content;
+		$this->boundary = new CachedBoundary(new RandomBoundary);
 	}
 
 	public function headers(): array {
 		return [
 			'Content-Type' => sprintf(
-				'multipart/alternative; boundary="%s"', $this->boundary()
+				'multipart/alternative; boundary="%s"', $this->boundary->hash()
 			)
 		];
 	}
 
 	public function content(): string {
-		$boundary = $this->boundary();
+		$boundary = $this->boundary->hash();
 		return implode(
 			PHP_EOL . PHP_EOL, [
 				$this->text($boundary, $this->content),
@@ -66,11 +67,5 @@ final class HtmlMessage implements Message {
 			sprintf('Content-Type: text/%s; charset=%s', $type, self::CHARSET),
 			'Content-Transfer-Encoding: 7bit'
 		]) . PHP_EOL . PHP_EOL;
-	}
-
-	private function boundary(): string {
-		if (!$this->boundary)
-			$this->boundary = bin2hex(random_bytes(10));
-		return md5($this->boundary);
 	}
 }

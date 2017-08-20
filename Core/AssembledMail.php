@@ -31,7 +31,7 @@ final class AssembledMail implements Mail {
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
-				$extensions ? array_merge($message->headers(), $extensions) :
+				$extensions ? $message->headers() + $extensions :
 					$message->headers()
 			)
 		))
@@ -58,7 +58,7 @@ final class AssembledMail implements Mail {
 		], $extensions);
 		return implode(
 			PHP_EOL, array_map(
-				function ($value, $header) {
+				function (string $value, string $header): string {
 					return sprintf('%s: %s', $header, $value);
 				}, $headers, array_keys($headers)
 			)
@@ -74,7 +74,7 @@ final class AssembledMail implements Mail {
 					', ', [
 						self::HIGH_PRIORITY,
 						self::MIDDLE_PRIORITY,
-						self::LOWEST_PRIORITY
+						self::LOWEST_PRIORITY,
 					]
 				))
 			);

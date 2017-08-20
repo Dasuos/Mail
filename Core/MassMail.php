@@ -35,7 +35,7 @@ final class MassMail implements Mail {
 			throw new \UnexpectedValueException(
 				'Only Bcc anc Cc headers are allowed'
 			);
-		if (empty($list))
+		if (!$list)
 			throw new \UnexpectedValueException('Mail list is empty');
 		return [$header => implode(',', $list)];
 
