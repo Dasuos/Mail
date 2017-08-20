@@ -31,8 +31,8 @@ final class AssembledMail implements Mail {
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
-				$message,
-				$extensions
+				$extensions ? array_merge($message->headers(), $extensions) :
+					$message->headers()
 			)
 		))
 			throw new \UnexpectedValueException(
@@ -45,23 +45,23 @@ final class AssembledMail implements Mail {
 	}
 
 	private function headers(
-		string $from,
-		int $priority,
-		Message $message,
-		array $extensions = self::NO_HEADERS
+		string $from, int $priority, array $extensions = self::NO_HEADERS
 	): string {
-		$headers = [
-			'MIME-Version: 1.0',
-			'From: ' . $from,
-			'Return-Path: ' . $from,
-			'Date: ' . date('r'),
-			'X-Sender: ' . $from,
-			'X-Mailer: PHP/' . phpversion(),
-			'X-Priority: ' . $priority,
-			$message->headers()
-		];
+		$headers = array_merge([
+			'MIME-Version' => '1.0',
+			'From' => $from,
+			'Return-Path' => $from,
+			'Date' => date('r'),
+			'X-Sender' => $from,
+			'X-Mailer' => 'PHP/' . phpversion(),
+			'X-Priority' => $priority,
+		], $extensions);
 		return implode(
-			PHP_EOL, $extensions ? array_merge($headers, $extensions) : $headers
+			PHP_EOL, array_map(
+				function ($value, $header) {
+					return sprintf('%s: %s', $header, $value);
+				}, $headers, array_keys($headers)
+			)
 		);
 	}
 

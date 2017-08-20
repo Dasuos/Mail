@@ -7,12 +7,12 @@ final class FakeMessage implements Message {
 	private $content;
 	private $headers;
 
-	public function __construct(string $content, string $headers) {
+	public function __construct(string $content, array $headers) {
 		$this->content = $content;
 		$this->headers = $headers;
 	}
 
-	public function headers(): string {
+	public function headers(): array {
 		return $this->headers;
 	}
 

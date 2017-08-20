@@ -6,6 +6,6 @@ interface Message {
 
 	const CHARSET = 'utf-8';
 
-	public function headers(): string;
+	public function headers(): array;
 	public function content(): string;
 }

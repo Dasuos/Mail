@@ -16,9 +16,11 @@ final class PlainMessage implements Message {
 		$this->footer = $footer;
 	}
 
-	public function headers(): string {
-		return 'Content-Type: text/plain; charset=' . self::CHARSET . PHP_EOL .
-			'Content-Transfer-Encoding: 7bit';
+	public function headers(): array {
+		return [
+			'Content-Type' => 'text/plain; charset=' . self::CHARSET,
+			'Content-Transfer-Encoding' => '7bit'
+		];
 	}
 
 	public function content(): string {

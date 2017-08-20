@@ -1,7 +1,7 @@
 <?php
 /**
  * @testCase
- * @phpVersion > 7.0
+ * @phpVersion > 7.1
  */
 namespace Dasuos\Tests;
 
@@ -13,18 +13,23 @@ require __DIR__ . '/../bootstrap.php';
 class HtmlMessage extends \Tester\TestCase {
 
 	public function testReturningAlternativeContentType() {
-		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::same(
-			'Content-Type: multipart/alternative; boundary="81fd830c85363675edb98d2879916d8c"',
-			(new Mail\HtmlMessage(
-				$content, 'boundary'
-			))->headers()
+			['Content-Type' => preg_replace(
+				'~"[0-9a-z]*"~', '""', 'multipart/alternative; boundary="81fd830c85363675edb98d2879916d8c"'
+			)],
+			preg_replace(
+				'~"[0-9a-z]*"~',
+				'""',
+				(new Mail\HtmlMessage(
+					'<h1>Foo</h1><p>Bar</p>', 'boundary'
+				))->headers()
+			)
 		);
 	}
 
 	public function testReturningPlainTextAndHtml() {
-		$content = '<h1>Foo</h1><p>Bar</p>';
 		Assert::same(
+			preg_replace('~--[0-9a-z]*(\s|--)~', '',
 			preg_replace('/\s+/', ' ',
 				'--81fd830c85363675edb98d2879916d8c 
 				Content-Type: text/plain; charset=utf-8 
@@ -39,12 +44,13 @@ class HtmlMessage extends \Tester\TestCase {
 				<h1>Foo</h1><p>Bar</p> 
 
 				--81fd830c85363675edb98d2879916d8c--'
-			),
+			)),
+			preg_replace('~--[0-9a-z]*(\s|--)~', '',
 			preg_replace('/\s+/', ' ',
 				(new Mail\HtmlMessage(
-					$content, 'boundary'
+					'<h1>Foo</h1><p>Bar</p>', 'boundary'
 				))->content()
-			)
+			))
 		);
 	}
 }

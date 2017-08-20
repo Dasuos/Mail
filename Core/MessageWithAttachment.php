@@ -4,33 +4,36 @@ namespace Dasuos\Mail;
 
 final class MessageWithAttachment implements Message {
 
-	private const EMPTY_BOUNDARY = '';
-
 	private $origin;
 	private $path;
 	private $boundary;
 
-	public function __construct(
-		Message $origin,
-		string $path,
-		string $boundary = self::EMPTY_BOUNDARY
-	) {
+	public function __construct(Message $origin, string $path) {
 		$this->origin = $origin;
 		$this->path = $path;
-		$this->boundary = $boundary;
 	}
 
-	public function headers(): string {
-		return sprintf(
-			'Content-Type: multipart/mixed; boundary="%s"',
-			$this->boundary()
-		);
+	public function headers(): array {
+		return [
+			'Content-Type' => sprintf(
+				'multipart/mixed; boundary="%s"', $this->boundary()
+			)
+		];
 	}
 
 	public function content(): string {
 		$boundary = $this->boundary();
 		return implode(PHP_EOL . PHP_EOL, [
-			'--' . $boundary . PHP_EOL . $this->origin->headers(),
+			'--' . $boundary . PHP_EOL .
+			implode(
+				PHP_EOL, array_map(
+					function ($value, $header) {
+						return sprintf('%s: %s', $header, $value);
+					},
+					$this->origin->headers(),
+					array_keys($this->origin->headers())
+				)
+			),
 			$this->origin->content(),
 			$this->attachment($boundary, $this->path)
 		]);
@@ -61,6 +64,8 @@ final class MessageWithAttachment implements Message {
 	}
 
 	private function boundary(): string {
-		return (new EncapsulationBoundary($this->boundary))->hash();
+		if (!$this->boundary)
+			$this->boundary = bin2hex(random_bytes(10));
+		return md5($this->boundary);
 	}
 }

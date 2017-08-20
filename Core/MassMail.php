@@ -37,7 +37,7 @@ final class MassMail implements Mail {
 			);
 		if (empty($list))
 			throw new \UnexpectedValueException('Mail list is empty');
-		return [sprintf('%s: %s', $header, implode(',', $list))];
+		return [$header => implode(',', $list)];
 
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @testCase
- * @phpVersion > 7.0
+ * @phpVersion > 7.1
  */
 namespace Dasuos\Tests;
 
@@ -14,8 +14,10 @@ class PlainMessage extends \Tester\TestCase {
 
 	public function testReturningContentType() {
 		Assert::same(
-			'Content-Type: text/plain; charset=utf-8'
-			. PHP_EOL . 'Content-Transfer-Encoding: 7bit',
+			[
+				'Content-Type' => 'text/plain; charset=utf-8',
+				'Content-Transfer-Encoding' => '7bit'
+			],
 			(new Mail\PlainMessage('foo bar'))->headers()
 		);
 	}

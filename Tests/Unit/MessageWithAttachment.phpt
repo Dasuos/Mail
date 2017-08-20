@@ -1,7 +1,7 @@
 <?php
 /**
  * @testCase
- * @phpVersion > 7.0
+ * @phpVersion > 7.1
  */
 namespace Dasuos\Tests;
 
@@ -13,18 +13,27 @@ require __DIR__ . '/../bootstrap.php';
 class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningMixedContentType() {
-		$path = __DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt';
 		Assert::same(
-			'Content-Type: multipart/mixed; boundary="81fd830c85363675edb98d2879916d8c"',
-			(new Mail\MessageWithAttachment(
-				new Mail\FakeMessage('content', 'headers'),
-				$path, 'boundary'
-			))->headers()
+			['Content-Type' => preg_replace(
+				'~"[0-9a-z]*"~',
+				'""',
+				'multipart/mixed; boundary="81fd830c85363675edb98d2879916d8c"'
+			)],
+			array_map(
+				function($value) {
+					return preg_replace('~"[0-9a-z]*"~', '""', $value);
+				},
+				(new Mail\MessageWithAttachment(
+					new Mail\FakeMessage('content', ['header' => 'value']),
+					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+				))->headers()
+			)
 		);
 	}
 
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
+			preg_replace('~--[0-9a-z]*(\s|--)~', '',
 			preg_replace('/\s+/', ' ',
 				'--81fd830c85363675edb98d2879916d8c
 				Content-Type: text/plain; charset=utf-8 
@@ -40,18 +49,20 @@ class MessageWithAttachment extends \Tester\TestCase {
 				dGVzdGluZyBjb250ZW50 
 			
 				--81fd830c85363675edb98d2879916d8c--'
-			),
+			)),
+			preg_replace('~--[0-9a-z]*(\s|--)~', '',
 			preg_replace('/\s+/', ' ',
 				(new Mail\MessageWithAttachment(
 					new Mail\FakeMessage(
 						'content',
-						'Content-Type: text/plain; charset=utf-8' . PHP_EOL .
-						'Content-Transfer-Encoding: 7bit'
+						[
+							'Content-Type' => 'text/plain; charset=utf-8',
+							'Content-Transfer-Encoding' => '7bit'
+						]
 					),
-					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt',
-					'boundary'
+					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
 				))->content()
-			)
+			))
 		);
 	}
 
@@ -61,7 +72,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 				(new Mail\MessageWithAttachment(
 					new Mail\FakeMessage(
 						'content',
-						'headers'
+						['header' => 'value']
 					), 'nonexistent/path'
 				))->content();
 			},
