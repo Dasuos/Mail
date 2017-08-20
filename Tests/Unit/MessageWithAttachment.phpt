@@ -34,7 +34,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
 			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('/\s+/', ' ',
+				preg_replace('~\s+~', ' ',
 					'--boundary
 					Content-Type: text/plain; charset=utf-8 
 					Content-Transfer-Encoding: 7bit 
@@ -52,7 +52,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 				)
 			),
 			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('/\s+/', ' ',
+				preg_replace('~\s+~', ' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\FakeMessage(
 							'content',

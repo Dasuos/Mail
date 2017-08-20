@@ -53,7 +53,7 @@ class HtmlMessage extends \Tester\TestCase {
 			preg_replace(
 				'~--[0-9a-z]*(\s|--)~', '',
 				preg_replace(
-					'/\s+/', ' ',
+					'~\s+~', ' ',
 					(new Mail\HtmlMessage('<h1>Foo</h1><p>Bar</p>'))->content()
 				)
 			)
