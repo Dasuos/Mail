@@ -47,7 +47,7 @@ final class AssembledMail implements Mail {
 	private function headers(
 		string $from, int $priority, array $extensions = self::NO_HEADERS
 	): string {
-		$headers = array_merge([
+		$headers = [
 			'MIME-Version' => '1.0',
 			'From' => $from,
 			'Return-Path' => $from,
@@ -55,7 +55,7 @@ final class AssembledMail implements Mail {
 			'X-Sender' => $from,
 			'X-Mailer' => 'PHP/' . phpversion(),
 			'X-Priority' => $priority,
-		], $extensions);
+		] + $extensions;
 		return implode(
 			PHP_EOL, array_map(
 				function (string $value, string $header): string {
