@@ -12,28 +12,29 @@ require __DIR__ . '/../bootstrap.php';
 
 class MessageWithAttachment extends \Tester\TestCase {
 
+	private const HTML_BOUNDARY_SEQUENCE = [0, 5, 6];
+	private const ATTACHMENT_BOUNDARY_SEQUENCE = [1, 2, 3, 4];
+
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
-			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('/\s+/', ' ',
-					'--boundary
-					Content-Type: text/plain; charset=utf-8 
-					Content-Transfer-Encoding: 7bit 
+			preg_replace('~\s+~', ' ',
+				'--boundary
+				Content-Type: text/plain; charset=utf-8 
+				Content-Transfer-Encoding: 7bit 
 				
-					content 
+				content 
 				
-					--boundary 
-					Content-Type: application/octet-stream; name="attachment.txt" 
-					Content-Transfer-Encoding: base64 
-					Content-Disposition: attachment; filename="attachment.txt" 
+				--boundary 
+				Content-Type: application/octet-stream; name="attachment.txt" 
+				Content-Transfer-Encoding: base64 
+				Content-Disposition: attachment; filename="attachment.txt" 
 				
-					dGVzdGluZyBjb250ZW50 
+				Zm9yIHRlc3RpbmcgcHVycG9zZQ== 
 				
-					--boundary--'
-				)
+				--boundary--'
 			),
-			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('/\s+/', ' ',
+			preg_replace('~[0-9a-z]{20}~', 'boundary',
+				preg_replace('~\s+~', ' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\PlainMessage('content'),
 						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
@@ -45,50 +46,43 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningHtmlWithAttachment() {
 		Assert::same(
-			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('~"[0-9a-z]*(\s|")~', '',
-					preg_replace('/\s+/', ' ',
-						'--boundary1
-						Content-Type: multipart/alternative; boundary="boundary2"
+			preg_replace('~\s+~', ' ',
+				'--boundary
+				Content-Type: multipart/alternative; boundary="boundary"
+				
+				--boundary
+				Content-Type: text/plain; charset=utf-8
+				Content-Transfer-Encoding: 7bit
+				
+				\ntitle\n\ncontent\n
+				
+				--boundary
+				Content-Type: text/html; charset=utf-8
+				Content-Transfer-Encoding: 7bit
+				
+				<h1>title</h1><p>content</p>
+				
+				--boundary--
+				
+				--boundary
+				Content-Type: application/octet-stream; name="attachment.txt"
+				Content-Transfer-Encoding: base64
+				Content-Disposition: attachment; filename="attachment.txt"
+				
+				Zm9yIHRlc3RpbmcgcHVycG9zZQ==
 						
-						--boundary2
-						Content-Type: text/plain; charset=utf-8
-						Content-Transfer-Encoding: 7bit
-						
-						\ntitle\n\ncontent\n
-						
-						--boundary2
-						Content-Type: text/html; charset=utf-8
-						Content-Transfer-Encoding: 7bit
-						
-						<h1>title</h1><p>content</p>
-						
-						--boundary2--
-						
-						--boundary1
-						Content-Type: application/octet-stream; name="attachment.txt"
-						Content-Transfer-Encoding: base64
-						Content-Disposition: attachment; filename="attachment.txt"
-						
-						dGVzdGluZyBjb250ZW50
-						
-						--boundary1--'
-					)
-				)
+				--boundary--'
 			),
-			preg_replace('~--[0-9a-z]*(\s|--)~', '',
-				preg_replace('~"[0-9a-z]*(\s|")~', '',
-					preg_replace('~\s+~', ' ',
-						(new Mail\MessageWithAttachment(
-							new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
-							__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
-						))->content()
-					)
+			preg_replace('~[0-9a-z]{20}~', 'boundary',
+				preg_replace('~\s+~', ' ',
+					(new Mail\MessageWithAttachment(
+						new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
+						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+					))->content()
 				)
 			)
 		);
 	}
-
 }
 
 (new MessageWithAttachment())->run();
