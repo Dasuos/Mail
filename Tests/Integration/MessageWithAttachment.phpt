@@ -12,6 +12,17 @@ require __DIR__ . '/../bootstrap.php';
 
 class MessageWithAttachment extends \Tester\TestCase {
 
+	private const HTML_BOUNDARY_SEQUENCE = [1, 2, 3, 4];
+	private const ATTACHMENT_BOUNDARY_SEQUENCE = [0, 5, 6];
+	private const BOUNDARY_SEQUENCE = 0;
+
+	public function sequences() {
+		return [
+			[self::HTML_BOUNDARY_SEQUENCE],
+			[self::ATTACHMENT_BOUNDARY_SEQUENCE],
+		];
+	}
+
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
 			preg_replace('~\s+~', ' ',
@@ -78,6 +89,30 @@ class MessageWithAttachment extends \Tester\TestCase {
 					))->content()
 				)
 			)
+		);
+	}
+
+	/**
+	 * @dataProvider sequences
+	 */
+
+	public function testReturningValidBoundarySequence(array $sequence) {
+		preg_match_all(
+			'~[0-9a-z]{20}~',
+			(new Mail\MessageWithAttachment(
+				new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
+				__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+			))->content(),
+			$matches
+		);
+		Assert::true(
+			count(array_unique(array_filter(
+				$matches[self::BOUNDARY_SEQUENCE],
+				function(int $key) use ($sequence) {
+					return !in_array($key, $sequence);
+				},
+				ARRAY_FILTER_USE_KEY
+			))) === 1
 		);
 	}
 }
