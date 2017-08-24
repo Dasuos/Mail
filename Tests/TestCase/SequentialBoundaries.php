@@ -15,7 +15,7 @@ final class SequentialBoundaries {
 	public function identical(): bool {
 		return count(array_unique(array_filter(
 			$this->boundaries,
-			function($key) {
+			function(int $key): bool {
 				return !in_array($key, $this->sequence);
 			},
 			ARRAY_FILTER_USE_KEY
