@@ -7,6 +7,7 @@ namespace Dasuos\Tests;
 
 use Tester\Assert;
 use Dasuos\Mail;
+use Dasuos\Tests\TestCase\SequentialBoundaries;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -14,7 +15,7 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	private const HTML_BOUNDARY_SEQUENCE = [1, 2, 3, 4];
 	private const ATTACHMENT_BOUNDARY_SEQUENCE = [0, 5, 6];
-	private const BOUNDARY_SEQUENCE = 0;
+	private const BOUNDARIES = 0;
 
 	public function sequences() {
 		return [
@@ -106,13 +107,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 			$matches
 		);
 		Assert::true(
-			count(array_unique(array_filter(
-				$matches[self::BOUNDARY_SEQUENCE],
-				function(int $key) use ($sequence) {
-					return !in_array($key, $sequence);
-				},
-				ARRAY_FILTER_USE_KEY
-			))) === 1
+			(new SequentialBoundaries(
+				$matches[self::BOUNDARIES], $sequence
+			))->identical()
 		);
 	}
 }
