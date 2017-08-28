@@ -27,13 +27,8 @@ final class MessageWithAttachment implements Message {
 		return implode(PHP_EOL . PHP_EOL, [
 			'--' . $boundary . PHP_EOL .
 			implode(
-				PHP_EOL, array_map(
-					function (string $value, string $header): string {
-						return sprintf('%s: %s', $header, $value);
-					},
-					$this->origin->headers(),
-					array_keys($this->origin->headers())
-				)
+				PHP_EOL,
+				(new MailHeaders($this->origin->headers()))->list()
 			),
 			$this->origin->content(),
 			$this->attachment($boundary, $this->path)

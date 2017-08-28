@@ -56,13 +56,7 @@ final class AssembledMail implements Mail {
 			'X-Mailer' => 'PHP/' . phpversion(),
 			'X-Priority' => $priority,
 		] + $extensions;
-		return implode(
-			PHP_EOL, array_map(
-				function (string $value, string $header): string {
-					return sprintf('%s: %s', $header, $value);
-				}, $headers, array_keys($headers)
-			)
-		);
+		return implode(PHP_EOL, (new MailHeaders($headers))->list());
 	}
 
 	private function priority(int $priority): int {
