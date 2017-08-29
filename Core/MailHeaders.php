@@ -14,8 +14,8 @@ final class MailHeaders {
 		return implode(
 			PHP_EOL,
 			array_map(
-				function (string $value, string $naming): MailHeader {
-					return new MailHeader($naming, $value);
+				function (string $value, string $naming): string {
+					return sprintf('%s: %s', $naming, $value);
 				},
 				$this->list,
 				array_keys($this->list)

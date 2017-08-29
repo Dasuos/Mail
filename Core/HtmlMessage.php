@@ -34,7 +34,7 @@ final class HtmlMessage implements Message {
 			PHP_EOL . PHP_EOL, [
 				$this->text($boundary, $this->content),
 				$this->html($boundary, $this->content),
-				'--' . $boundary . '--'
+				'--' . $boundary . '--',
 			]
 		);
 	}
@@ -64,11 +64,12 @@ final class HtmlMessage implements Message {
 	private function boundHeaders(string $boundary, string $type): string {
 		return implode(PHP_EOL, [
 			'--' . $boundary,
-			new MailHeader(
-				'Content-Type',
-				sprintf('text/%s; charset=%s', $type, self::CHARSET)
-			),
-			new MailHeader('Content-Transfer-Encoding', '7bit'),
+			new MailHeaders([
+				'Content-Type' => sprintf(
+					'text/%s; charset=%s', $type, self::CHARSET
+				),
+				'Content-Transfer-Encoding' => '7bit',
+			]),
 		]) . PHP_EOL . PHP_EOL;
 	}
 }

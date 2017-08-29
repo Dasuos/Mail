@@ -36,15 +36,15 @@ final class MessageWithAttachment implements Message {
 		$name = basename($path);
 		return implode(PHP_EOL, [
 			'--' . $boundary,
-			new MailHeader(
-				'Content-Type',
-				sprintf('application/octet-stream; name="%s"', $name)
-			),
-			new MailHeader('Content-Transfer-Encoding', 'base64'),
-			new MailHeader(
-				'Content-Disposition',
-				sprintf('attachment; filename="%s"', $name)
-			),
+			new MailHeaders([
+				'Content-Type' => sprintf(
+					'application/octet-stream; name="%s"', $name
+				),
+				'Content-Transfer-Encoding' => 'base64',
+				'Content-Disposition' => sprintf(
+					'attachment; filename="%s"', $name
+				),
+			]),
 			PHP_EOL . $this->file($path),
 			'--' . $boundary . '--',
 		]);
