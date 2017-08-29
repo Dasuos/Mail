@@ -48,14 +48,14 @@ final class AssembledMail implements Mail {
 		string $from, int $priority, array $extensions = self::NO_HEADERS
 	): string {
 		return (string) new MailHeaders([
-				'MIME-Version' => '1.0',
-				'From' => $from,
-				'Return-Path' => $from,
-				'Date' => date('r'),
-				'X-Sender' => $from,
-				'X-Mailer' => 'PHP/' . phpversion(),
-				'X-Priority' => $priority,
-		 	] + $extensions);
+			'MIME-Version' => '1.0',
+			'From' => $from,
+			'Return-Path' => $from,
+			'Date' => date('r'),
+			'X-Sender' => $from,
+			'X-Mailer' => 'PHP/' . phpversion(),
+			'X-Priority' => $priority,
+		 ] + $extensions);
 	}
 
 	private function priority(int $priority): int {
