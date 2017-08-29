@@ -18,7 +18,7 @@ final class PlainMessage implements Message {
 
 	public function headers(): array {
 		return [
-			'Content-Type' => 'text/plain; charset=' . self::CHARSET,
+			'Content-Type' => sprintf('text/plain; charset=%s', self::CHARSET),
 			'Content-Transfer-Encoding' => '7bit'
 		];
 	}

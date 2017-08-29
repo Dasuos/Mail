@@ -4,9 +4,13 @@ namespace Dasuos\Mail;
 
 final class AssembledMail implements Mail {
 
-	public const HIGH_PRIORITY = 1,
-		MIDDLE_PRIORITY = 3,
-		LOWEST_PRIORITY = 5;
+	public const HIGH_PRIORITY = 1, MIDDLE_PRIORITY = 3, LOWEST_PRIORITY = 5;
+
+	private const PRIORITIES = [
+		self::LOWEST_PRIORITY,
+		self::MIDDLE_PRIORITY,
+		self::HIGH_PRIORITY
+	];
 
 	private $from;
 	private $priority;
@@ -59,17 +63,12 @@ final class AssembledMail implements Mail {
 	}
 
 	private function priority(int $priority): int {
-		if (!in_array($priority,
-			[self::HIGH_PRIORITY, self::MIDDLE_PRIORITY, self::LOWEST_PRIORITY]
-		))
+		if (!in_array($priority, self::PRIORITIES))
 			throw new \UnexpectedValueException(
-				sprintf('Allowed mail priority types are: ', implode(
-					', ', [
-						self::HIGH_PRIORITY,
-						self::MIDDLE_PRIORITY,
-						self::LOWEST_PRIORITY,
-					]
-				))
+				sprintf(
+					'Allowed mail priority types are: ',
+					implode(', ', self::PRIORITIES)
+				)
 			);
 		return $priority;
 	}

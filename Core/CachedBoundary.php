@@ -12,7 +12,7 @@ final class CachedBoundary implements Boundary {
 	}
 
 	public function hash(): string {
-		if (!$this->hash)
+		if ($this->hash === NULL)
 			$this->hash = $this->origin->hash();
 		return $this->hash;
 	}

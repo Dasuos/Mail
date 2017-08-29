@@ -4,15 +4,12 @@ namespace Dasuos\Mail;
 
 final class MassMail implements Mail {
 
-	public const BCC = 'Bcc';
-	public const CC = 'Cc';
-
 	private $origin;
 	private $list;
 	private $header;
 
 	public function __construct(
-		Mail $origin, array $list, string $header = self::BCC
+		Mail $origin, array $list, string $header = 'Bcc'
 	) {
 		$this->origin = $origin;
 		$this->list = $list;
@@ -31,7 +28,7 @@ final class MassMail implements Mail {
 	}
 
 	private function header(string $header, array $list): array {
-		if (!in_array($header, [self::BCC, self::CC]))
+		if (!in_array($header, ['Bcc', 'Cc']))
 			throw new \UnexpectedValueException(
 				'Only Bcc anc Cc headers are allowed'
 			);
