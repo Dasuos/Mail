@@ -9,7 +9,7 @@ final class AssembledMail implements Mail {
 	private const PRIORITIES = [
 		self::LOWEST_PRIORITY,
 		self::MIDDLE_PRIORITY,
-		self::HIGH_PRIORITY
+		self::HIGH_PRIORITY,
 	];
 
 	private $from;
