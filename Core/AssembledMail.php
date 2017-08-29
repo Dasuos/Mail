@@ -51,7 +51,7 @@ final class AssembledMail implements Mail {
 	private function headers(
 		string $from, int $priority, array $extensions = self::NO_HEADERS
 	): string {
-		return (string) new MailHeaders([
+		return (string) new Headers([
 			'MIME-Version' => '1.0',
 			'From' => $from,
 			'Return-Path' => $from,

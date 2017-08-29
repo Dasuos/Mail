@@ -26,7 +26,7 @@ final class MessageWithAttachment implements Message {
 		$boundary = $this->boundary->hash();
 		return implode(PHP_EOL . PHP_EOL, [
 			'--' . $boundary . PHP_EOL .
-			new MailHeaders($this->origin->headers()),
+			new Headers($this->origin->headers()),
 			$this->origin->content(),
 			$this->attachment($boundary, $this->path)
 		]);
@@ -36,7 +36,7 @@ final class MessageWithAttachment implements Message {
 		$name = basename($path);
 		return implode(PHP_EOL, [
 			'--' . $boundary,
-			new MailHeaders([
+			new Headers([
 				'Content-Type' => sprintf(
 					'application/octet-stream; name="%s"', $name
 				),

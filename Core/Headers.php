@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
-final class MailHeaders {
+final class Headers {
 
 	private $list;
 
