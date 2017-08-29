@@ -26,10 +26,7 @@ final class MessageWithAttachment implements Message {
 		$boundary = $this->boundary->hash();
 		return implode(PHP_EOL . PHP_EOL, [
 			'--' . $boundary . PHP_EOL .
-			implode(
-				PHP_EOL,
-				(new MailHeaders($this->origin->headers()))->list()
-			),
+			new MailHeaders($this->origin->headers()),
 			$this->origin->content(),
 			$this->attachment($boundary, $this->path)
 		]);
@@ -39,9 +36,15 @@ final class MessageWithAttachment implements Message {
 		$name = basename($path);
 		return implode(PHP_EOL, [
 			'--' . $boundary,
-			sprintf('Content-Type: application/octet-stream; name="%s"', $name),
-			'Content-Transfer-Encoding: base64',
-			sprintf('Content-Disposition: attachment; filename="%s"', $name),
+			new MailHeader(
+				'Content-Type',
+				sprintf('application/octet-stream; name="%s"', $name)
+			),
+			new MailHeader('Content-Transfer-Encoding', 'base64'),
+			new MailHeader(
+				'Content-Disposition',
+				sprintf('attachment; filename="%s"', $name)
+			),
 			PHP_EOL . $this->file($path),
 			'--' . $boundary . '--',
 		]);

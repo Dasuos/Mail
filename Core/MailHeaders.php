@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Dasuos\Mail;
 
-final class MailHeaders implements Headers {
+final class MailHeaders {
 
 	private $list;
 
@@ -10,13 +10,16 @@ final class MailHeaders implements Headers {
 		$this->list = $list;
 	}
 
-	public function list(): array {
-		return array_map(
-			function (string $value, string $header): string {
-				return sprintf('%s: %s', $header, $value);
-			},
-			$this->list,
-			array_keys($this->list)
+	public function __toString(): string {
+		return implode(
+			PHP_EOL,
+			array_map(
+				function (string $value, string $naming): MailHeader {
+					return new MailHeader($naming, $value);
+				},
+				$this->list,
+				array_keys($this->list)
+			)
 		);
 	}
 }

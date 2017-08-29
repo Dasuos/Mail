@@ -28,7 +28,7 @@ final class AssembledMail implements Mail {
 			$to,
 			$this->subject($subject),
 			$message->content(),
-			$this->headers(
+			(string) $this->headers(
 				$this->from,
 				$this->priority($this->priority),
 				$extensions ? $message->headers() + $extensions :
@@ -46,10 +46,9 @@ final class AssembledMail implements Mail {
 
 	private function headers(
 		string $from, int $priority, array $extensions = self::NO_HEADERS
-	): string {
-		return implode(
-			PHP_EOL,
-			(new MailHeaders([
+	): MailHeaders {
+		return new MailHeaders(
+			[
 				'MIME-Version' => '1.0',
 				'From' => $from,
 				'Return-Path' => $from,
@@ -57,7 +56,7 @@ final class AssembledMail implements Mail {
 				'X-Sender' => $from,
 				'X-Mailer' => 'PHP/' . phpversion(),
 				'X-Priority' => $priority,
-		 	] + $extensions))->list()
+		 	] + $extensions
 		);
 	}
 
