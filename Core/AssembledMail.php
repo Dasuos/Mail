@@ -33,8 +33,9 @@ final class AssembledMail implements Mail {
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
-				$extensions ? $message->headers() + $extensions :
-					$message->headers()
+				$extensions
+					? $message->headers() + $extensions
+					: $message->headers()
 			)
 		))
 			throw new \UnexpectedValueException('Mail was not accepted for delivery');
