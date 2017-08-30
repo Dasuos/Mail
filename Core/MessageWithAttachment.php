@@ -17,19 +17,23 @@ final class MessageWithAttachment implements Message {
 	public function headers(): array {
 		return [
 			'Content-Type' => sprintf(
-				'multipart/mixed; boundary="%s"', $this->boundary->hash()
-			)
+				'multipart/mixed; boundary="%s"',
+				$this->boundary->hash()
+			),
 		];
 	}
 
 	public function content(): string {
 		$boundary = $this->boundary->hash();
-		return implode(PHP_EOL . PHP_EOL, [
-			'--' . $boundary . PHP_EOL .
-			new Headers($this->origin->headers()),
-			$this->origin->content(),
-			$this->attachment($boundary, $this->path)
-		]);
+		return implode(
+			PHP_EOL . PHP_EOL,
+			[
+				'--' . $boundary . PHP_EOL .
+				new Headers($this->origin->headers()),
+				$this->origin->content(),
+				$this->attachment($boundary, $this->path),
+			]
+		);
 	}
 
 	private function attachment(string $boundary, string $path): string {
@@ -38,11 +42,13 @@ final class MessageWithAttachment implements Message {
 			'--' . $boundary,
 			new Headers([
 				'Content-Type' => sprintf(
-					'application/octet-stream; name="%s"', $name
+					'application/octet-stream; name="%s"',
+					$name
 				),
 				'Content-Transfer-Encoding' => 'base64',
 				'Content-Disposition' => sprintf(
-					'attachment; filename="%s"', $name
+					'attachment; filename="%s"',
+					$name
 				),
 			]),
 			PHP_EOL . $this->file($path),
@@ -51,14 +57,14 @@ final class MessageWithAttachment implements Message {
 	}
 
 	private function existingPath(string $path): string {
-		if (!file_exists($path))
-			throw new \UnexpectedValueException('Attached file does not exist');
-		return $path;
+		if (file_exists($path))
+			return $path;
+		throw new \UnexpectedValueException('Attached file does not exist');
 	}
 
 	private function file(string $path): string {
-		return chunk_split(base64_encode(
-			file_get_contents($this->existingPath($path))
-		));
+		return chunk_split(
+			base64_encode(file_get_contents($this->existingPath($path)))
+		);
 	}
 }

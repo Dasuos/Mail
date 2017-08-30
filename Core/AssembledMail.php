@@ -15,9 +15,7 @@ final class AssembledMail implements Mail {
 	private $from;
 	private $priority;
 
-	public function __construct(
-		string $from, int $priority = self::HIGH_PRIORITY
-	) {
+	public function __construct(string $from, int $priority = self::HIGH_PRIORITY) {
 		$this->from = $from;
 		$this->priority = $priority;
 	}
@@ -35,13 +33,12 @@ final class AssembledMail implements Mail {
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
-				$extensions ? $message->headers() + $extensions :
-					$message->headers()
+				$extensions
+					? $message->headers() + $extensions
+					: $message->headers()
 			)
 		))
-			throw new \UnexpectedValueException(
-				'Mail was not accepted for delivery'
-			);
+			throw new \UnexpectedValueException('Mail was not accepted for delivery');
 	}
 
 	private function subject(string $subject): string {
@@ -49,27 +46,31 @@ final class AssembledMail implements Mail {
 	}
 
 	private function headers(
-		string $from, int $priority, array $extensions = self::NO_HEADERS
+		string $from,
+		int $priority,
+		array $extensions = self::NO_HEADERS
 	): string {
-		return (string) new Headers([
-			'MIME-Version' => '1.0',
-			'From' => $from,
-			'Return-Path' => $from,
-			'Date' => date('r'),
-			'X-Sender' => $from,
-			'X-Mailer' => 'PHP/' . phpversion(),
-			'X-Priority' => $priority,
-		 ] + $extensions);
+		return (string) new Headers(
+			[
+				'MIME-Version' => '1.0',
+				'From' => $from,
+				'Return-Path' => $from,
+				'Date' => date('r'),
+				'X-Sender' => $from,
+				'X-Mailer' => 'PHP/' . phpversion(),
+				'X-Priority' => $priority,
+			] + $extensions
+		);
 	}
 
 	private function priority(int $priority): int {
-		if (!in_array($priority, self::PRIORITIES))
-			throw new \UnexpectedValueException(
-				sprintf(
-					'Allowed mail priority types are: ',
-					implode(', ', self::PRIORITIES)
-				)
-			);
-		return $priority;
+		if (in_array($priority, self::PRIORITIES))
+			return $priority;
+		throw new \UnexpectedValueException(
+			sprintf(
+				'Allowed mail priority types are: ',
+				implode(', ', self::PRIORITIES)
+			)
+		);
 	}
 }
