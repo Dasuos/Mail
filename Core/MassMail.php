@@ -23,7 +23,10 @@ final class MassMail implements Mail {
 		array $headers = self::NO_HEADERS
 	): void {
 		$this->origin->send(
-			$to, $subject, $message, $this->header($this->header, $this->list)
+			$to,
+			$subject,
+			$message,
+			$this->header($this->header, $this->list)
 		);
 	}
 

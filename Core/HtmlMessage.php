@@ -23,7 +23,8 @@ final class HtmlMessage implements Message {
 	public function headers(): array {
 		return [
 			'Content-Type' => sprintf(
-				'multipart/alternative; boundary="%s"', $this->boundary->hash()
+				'multipart/alternative; boundary="%s"',
+				$this->boundary->hash()
 			)
 		];
 	}
@@ -51,8 +52,11 @@ final class HtmlMessage implements Message {
 								self::HTML_REPLACEMENTS[$pattern],
 								$content
 							);
-						}, $content
-					), ENT_QUOTES, self::CHARSET
+						},
+						$content
+					),
+					ENT_QUOTES,
+					self::CHARSET
 				)
 			);
 	}
@@ -66,7 +70,9 @@ final class HtmlMessage implements Message {
 			'--' . $boundary,
 			new Headers([
 				'Content-Type' => sprintf(
-					'text/%s; charset=%s', $type, self::CHARSET
+					'text/%s; charset=%s',
+					$type,
+					self::CHARSET
 				),
 				'Content-Transfer-Encoding' => '7bit',
 			]),
