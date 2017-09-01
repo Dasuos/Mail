@@ -42,7 +42,7 @@ final class AssembledMail implements Mail {
 	}
 
 	private function subject(string $subject): string {
-		return '=?UTF-8?Q?' . imap_8bit($subject) . '?=';
+		return '=?UTF-8?B?' . base64_encode($subject) . '?=';
 	}
 
 	private function headers(
@@ -68,7 +68,7 @@ final class AssembledMail implements Mail {
 			return $priority;
 		throw new \UnexpectedValueException(
 			sprintf(
-				'Allowed mail priority types are: ',
+				'Allowed mail priority types are: %s',
 				implode(', ', self::PRIORITIES)
 			)
 		);
