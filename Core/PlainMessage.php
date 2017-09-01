@@ -10,7 +10,8 @@ final class PlainMessage implements Message {
 	private $footer;
 
 	public function __construct(
-		string $content, string $footer = self::NO_FOOTER
+		string $content,
+		string $footer = self::NO_FOOTER
 	) {
 		$this->content = $content;
 		$this->footer = $footer;
@@ -19,7 +20,7 @@ final class PlainMessage implements Message {
 	public function headers(): array {
 		return [
 			'Content-Type' => sprintf('text/plain; charset=%s', self::CHARSET),
-			'Content-Transfer-Encoding' => '7bit'
+			'Content-Transfer-Encoding' => '7bit',
 		];
 	}
 

@@ -25,14 +25,15 @@ final class HtmlMessage implements Message {
 			'Content-Type' => sprintf(
 				'multipart/alternative; boundary="%s"',
 				$this->boundary->hash()
-			)
+			),
 		];
 	}
 
 	public function content(): string {
 		$boundary = $this->boundary->hash();
 		return implode(
-			PHP_EOL . PHP_EOL, [
+			PHP_EOL . PHP_EOL,
+			[
 				$this->text($boundary, $this->content),
 				$this->html($boundary, $this->content),
 				'--' . $boundary . '--',

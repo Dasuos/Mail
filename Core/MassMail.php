@@ -9,7 +9,9 @@ final class MassMail implements Mail {
 	private $header;
 
 	public function __construct(
-		Mail $origin, array $list, string $header = 'Bcc'
+		Mail $origin,
+		array $list,
+		string $header = 'Bcc'
 	) {
 		$this->origin = $origin;
 		$this->list = $list;
@@ -38,6 +40,5 @@ final class MassMail implements Mail {
 		if (!$list)
 			throw new \UnexpectedValueException('Mail list is empty');
 		return [$header => implode(',', $list)];
-
 	}
 }
