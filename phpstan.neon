@@ -1,0 +1,3 @@
+parameters:
+	ignoreErrors:
+		- '#Function imap_8bit not found.#'

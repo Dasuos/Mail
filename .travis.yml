@@ -12,6 +12,7 @@ install:
 script:
   - ./vendor/bin/tester -o console -p php Tests/
   - ./vendor/bin/parallel-lint -e php,phpt Core Tests
+  - ./vendor/bin/phpstan analyse -l max -c phpstan.neon Core/
 
 after_failure:
   - for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done

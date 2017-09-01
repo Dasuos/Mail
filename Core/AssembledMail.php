@@ -68,7 +68,7 @@ final class AssembledMail implements Mail {
 			return $priority;
 		throw new \UnexpectedValueException(
 			sprintf(
-				'Allowed mail priority types are: ',
+				'Allowed mail priority types are: %s',
 				implode(', ', self::PRIORITIES)
 			)
 		);
