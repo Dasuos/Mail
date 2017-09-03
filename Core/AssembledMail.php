@@ -59,6 +59,7 @@ final class AssembledMail implements Mail {
 				'X-Sender' => $from,
 				'X-Mailer' => 'PHP/' . phpversion(),
 				'X-Priority' => $priority,
+				'Message-Id' => new MessageIdentification,
 			] + $extensions
 		);
 	}

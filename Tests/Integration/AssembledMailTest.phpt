@@ -70,16 +70,22 @@ class AssembledMailTest extends \Tester\TestCase {
 				X-Sender: from@bar.cz
 				X-Mailer: PHP/version
 				X-Priority: 1
+				Message-Id: random@domain.cz
 				Content-Type: multipart/alternative; boundary="random"'
 			),
-			preg_replace('~[0-9a-z]{20}~', 'random',
-				preg_replace('~\s+~', ' ',
-					preg_replace('~X-Mailer: PHP/\d\.\d\.\d~',
-						'X-Mailer: PHP/version',
+			preg_replace(
+				'~Message-Id: <\d+\.[0-9a-z]+@.+>~',
+				'Message-Id: random@domain.cz',
+				preg_replace('~[0-9a-z]{20}~', 'random',
+					preg_replace('~\s+~', ' ',
 						preg_replace(
-							'~Date: \w+,\s\d{2}\s\w+\s\d{4}\s\d{2}:\d{2}:\d{2}\s\+\d{4}~',
-							'Date: actual',
-							$result
+							'~X-Mailer: PHP/\d\.\d\.\d~',
+							'X-Mailer: PHP/version',
+							preg_replace(
+								'~Date: \w+,\s\d{2}\s\w+\s\d{4}\s\d{2}:\d{2}:\d{2}\s\+\d{4}~',
+								'Date: actual',
+								$result
+							)
 						)
 					)
 				)
