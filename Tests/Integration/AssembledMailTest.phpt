@@ -25,6 +25,7 @@ function mail(
 }
 
 use Tester\Assert;
+use Dasuos\Tests\TestCase\ExemplaryHeaders;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -66,30 +67,14 @@ class AssembledMailTest extends \Tester\TestCase {
 				MIME-Version: 1.0
 				From: from@bar.cz
 				Return-Path: from@bar.cz
-				Date: actual
+				Date: example
 				X-Sender: from@bar.cz
-				X-Mailer: PHP/version
+				X-Mailer: PHP/example
 				X-Priority: 1
-				Message-Id: random@domain.cz
-				Content-Type: multipart/alternative; boundary="random"'
+				Message-Id: example
+				Content-Type: multipart/alternative; boundary="example"'
 			),
-			preg_replace(
-				'~Message-Id: <\d+\.[0-9a-z]+@.+>~',
-				'Message-Id: random@domain.cz',
-				preg_replace('~[0-9a-z]{20}~', 'random',
-					preg_replace('~\s+~', ' ',
-						preg_replace(
-							'~X-Mailer: PHP/\d\.\d\.\d~',
-							'X-Mailer: PHP/version',
-							preg_replace(
-								'~Date: \w+,\s\d{2}\s\w+\s\d{4}\s\d{2}:\d{2}:\d{2}\s\+\d{4}~',
-								'Date: actual',
-								$result
-							)
-						)
-					)
-				)
-			)
+			(string) new ExemplaryHeaders($result)
 		);
 	}
 }
