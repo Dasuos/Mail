@@ -1,13 +1,14 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-namespace Dasuos\Tests;
+namespace Dasuos\Mail\Integration;
 
-use Tester\Assert;
 use Dasuos\Mail;
-use Dasuos\Tests\TestCase\SequentialBoundaries;
+use Dasuos\Mail\TestCase\SequentialBoundaries;
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -26,7 +27,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
-			preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~\s+~',
+				' ',
 				'--boundary
 				Content-Type: text/plain; charset=utf-8 
 				Content-Transfer-Encoding: 7bit 
@@ -42,8 +45,12 @@ class MessageWithAttachment extends \Tester\TestCase {
 				
 				--boundary--'
 			),
-			preg_replace('~[0-9a-z]{20}~', 'boundary',
-				preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~[0-9a-z]{20}~',
+				'boundary',
+				preg_replace(
+					'~\s+~',
+					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\PlainMessage('content'),
 						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
@@ -55,7 +62,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningHtmlWithAttachment() {
 		Assert::same(
-			preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~\s+~',
+				' ',
 				'--boundary
 				Content-Type: multipart/alternative; boundary="boundary"
 				
@@ -82,8 +91,12 @@ class MessageWithAttachment extends \Tester\TestCase {
 						
 				--boundary--'
 			),
-			preg_replace('~[0-9a-z]{20}~', 'boundary',
-				preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~[0-9a-z]{20}~',
+				'boundary',
+				preg_replace(
+					'~\s+~',
+					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
 						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
@@ -96,7 +109,6 @@ class MessageWithAttachment extends \Tester\TestCase {
 	/**
 	 * @dataProvider sequences
 	 */
-
 	public function testReturningValidBoundarySequence(array $sequence) {
 		preg_match_all(
 			'~[0-9a-z]{20}~',
@@ -108,7 +120,8 @@ class MessageWithAttachment extends \Tester\TestCase {
 		);
 		Assert::true(
 			(new SequentialBoundaries(
-				$matches[self::BOUNDARIES], $sequence
+				$matches[self::BOUNDARIES],
+				$sequence
 			))->identical()
 		);
 	}

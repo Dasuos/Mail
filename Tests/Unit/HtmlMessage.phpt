@@ -1,12 +1,13 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-namespace Dasuos\Tests;
+namespace Dasuos\Mail\Unit;
 
-use Tester\Assert;
 use Dasuos\Mail;
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -26,7 +27,8 @@ class HtmlMessage extends \Tester\TestCase {
 	public function testReturningPlainTextAndHtml() {
 		Assert::same(
 			preg_replace(
-				'~\s+~', ' ',
+				'~\s+~',
+				' ',
 				'--boundary 
 				Content-Type: text/plain; charset=utf-8 
 				Content-Transfer-Encoding: 7bit 
@@ -42,9 +44,11 @@ class HtmlMessage extends \Tester\TestCase {
 				--boundary--'
 			),
 			preg_replace(
-				'~[0-9a-z]{20}~', 'boundary',
+				'~[0-9a-z]{20}~',
+				'boundary',
 				preg_replace(
-					'~\s+~', ' ',
+					'~\s+~',
+					' ',
 					(new Mail\HtmlMessage('<h1>Foo</h1><p>Bar</p>'))->content()
 				)
 			)

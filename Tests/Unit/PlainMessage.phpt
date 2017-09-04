@@ -1,22 +1,23 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-namespace Dasuos\Tests;
+namespace Dasuos\Mail\Unit;
 
-use Tester\Assert;
 use Dasuos\Mail;
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-class PlainMessage extends \Tester\TestCase {
+final class PlainMessage extends \Tester\TestCase {
 
 	public function testReturningContentType() {
 		Assert::same(
 			[
 				'Content-Type' => 'text/plain; charset=utf-8',
-				'Content-Transfer-Encoding' => '7bit'
+				'Content-Transfer-Encoding' => '7bit',
 			],
 			(new Mail\PlainMessage('foo bar'))->headers()
 		);

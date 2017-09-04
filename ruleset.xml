@@ -14,6 +14,11 @@
 		<exclude name="Squiz.Functions.GlobalFunction.Found"/>
 	</rule>
 
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>Tests/Unit</exclude-pattern>
+        <exclude-pattern>Tests/Integration</exclude-pattern>
+    </rule>
+
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
 		<exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
 		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>
@@ -54,9 +59,13 @@
 		</properties>
 	</rule>
 
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
+        <exclude-pattern>Tests/Integration/AssembledMailTest.phpt</exclude-pattern>
+    </rule>
+
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
 		<properties>
-			<property name="rootNamespaces" type="array" value="Core=>Dasuos\Mail"/>
+			<property name="rootNamespaces" type="array" value="Core=>Dasuos\Mail,Tests=>Dasuos\Mail"/>
 			<property name="extensions" type="array" value="php,phpt"/>
 		</properties>
 	</rule>

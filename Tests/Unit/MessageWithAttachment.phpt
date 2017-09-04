@@ -1,12 +1,13 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-namespace Dasuos\Tests;
+namespace Dasuos\Mail\Unit;
 
-use Tester\Assert;
 use Dasuos\Mail;
+use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -28,7 +29,9 @@ class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningPlainTextWithAttachment() {
 		Assert::same(
-			preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~\s+~',
+				' ',
 				'--boundary
 				Content-Type: text/plain; charset=utf-8 
 				Content-Transfer-Encoding: 7bit 
@@ -44,14 +47,18 @@ class MessageWithAttachment extends \Tester\TestCase {
 				
 				--boundary--'
 			),
-			preg_replace('~[0-9a-z]{20}~', 'boundary',
-				preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~[0-9a-z]{20}~',
+				'boundary',
+				preg_replace(
+					'~\s+~',
+					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\FakeMessage(
 							'content',
 							[
 								'Content-Type' => 'text/plain; charset=utf-8',
-								'Content-Transfer-Encoding' => '7bit'
+								'Content-Transfer-Encoding' => '7bit',
 							]
 						),
 						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
@@ -68,7 +75,8 @@ class MessageWithAttachment extends \Tester\TestCase {
 					new Mail\FakeMessage(
 						'content',
 						['header' => 'value']
-					), 'nonexistent/path'
+					),
+					'nonexistent/path'
 				))->content();
 			},
 			\UnexpectedValueException::class,

@@ -1,9 +1,9 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-
 namespace Dasuos\Mail;
 
 function mail(
@@ -24,8 +24,8 @@ function mail(
 	return true;
 }
 
+use Dasuos\Mail\TestCase\ExemplaryHeaders;
 use Tester\Assert;
-use Dasuos\Tests\TestCase\ExemplaryHeaders;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -62,7 +62,9 @@ class AssembledMailTest extends \Tester\TestCase {
 		);
 		$result = ob_get_clean();
 		Assert::contains(
-			preg_replace('~\s+~', ' ',
+			preg_replace(
+				'~\s+~',
+				' ',
 				'Headers: 
 				MIME-Version: 1.0
 				From: from@bar.cz
