@@ -14,11 +14,6 @@
 		<exclude name="Squiz.Functions.GlobalFunction.Found"/>
 	</rule>
 
-    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-        <exclude-pattern>Tests/Unit</exclude-pattern>
-        <exclude-pattern>Tests/Integration</exclude-pattern>
-    </rule>
-
 	<rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
 		<exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint"/>
 		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>
@@ -43,25 +38,23 @@
 	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingReturnTypeHint">
 		<exclude-pattern>Tests/Unit</exclude-pattern>
 		<exclude-pattern>Tests/Integration</exclude-pattern>
-		<exclude-pattern>Tests/UI</exclude-pattern>
-		<exclude-pattern>Tests/Functional</exclude-pattern>
-		<exclude-pattern>Tests/Postgres</exclude-pattern>
-		<exclude-pattern>Tests/Pings.phpt</exclude-pattern>
 	</rule>
 
-	<rule ref="Squiz.Strings.DoubleQuoteUsage.ContainsVar">
-		<exclude-pattern>Tests/Functional</exclude-pattern>
-	</rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>Tests/Unit</exclude-pattern>
+        <exclude-pattern>Tests/Integration</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
+        <exclude-pattern>Tests/Integration/AssembledMailTest.phpt</exclude-pattern>
+    </rule>
+
 
 	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
 		<properties>
 			<property name="usefulAnnotations" type="array" value="@dataProvider,@throws"/>
 		</properties>
 	</rule>
-
-    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName">
-        <exclude-pattern>Tests/Integration/AssembledMailTest.phpt</exclude-pattern>
-    </rule>
 
 	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
 		<properties>
