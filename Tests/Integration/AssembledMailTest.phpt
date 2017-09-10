@@ -29,7 +29,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-class AssembledMailTest extends \Tester\TestCase {
+final class AssembledMailTest extends \Tester\TestCase {
 
 	public function testReturningToHeader() {
 		ob_start();

@@ -11,7 +11,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-class HtmlMessage extends \Tester\TestCase {
+final class HtmlMessage extends \Tester\TestCase {
 
 	public function testReturningAlternativeContentType() {
 		Assert::same(

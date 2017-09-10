@@ -11,7 +11,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-class MessageWithAttachment extends \Tester\TestCase {
+final class MessageWithAttachment extends \Tester\TestCase {
 
 	public function testReturningMixedContentType() {
 		Assert::same(

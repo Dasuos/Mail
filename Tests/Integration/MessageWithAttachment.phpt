@@ -12,7 +12,7 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-class MessageWithAttachment extends \Tester\TestCase {
+final class MessageWithAttachment extends \Tester\TestCase {
 
 	private const HTML_BOUNDARY_SEQUENCE = [1, 2, 3, 4];
 	private const ATTACHMENT_BOUNDARY_SEQUENCE = [0, 5, 6];
