@@ -7,9 +7,9 @@ interface Mail {
 	public const NO_HEADERS = [];
 
 	public function send(
-		string $to,
+		string $receiver,
 		string $subject,
 		Message $message,
-		array $headers
+		array $extensions
 	): void;
 }

@@ -19,16 +19,18 @@ final class MassMail implements Mail {
 	}
 
 	public function send(
-		string $to,
+		string $receiver,
 		string $subject,
 		Message $message,
-		array $headers = self::NO_HEADERS
+		array $extensions = self::NO_HEADERS
 	): void {
 		$this->origin->send(
-			$to,
+			$receiver,
 			$subject,
 			$message,
-			$this->header($this->header, $this->list)
+			$extensions
+				? $this->header($this->header, $this->list) + $extensions
+				: $this->header($this->header, $this->list)
 		);
 	}
 

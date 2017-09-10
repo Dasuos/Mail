@@ -21,13 +21,13 @@ final class AssembledMail implements Mail {
 	}
 
 	public function send(
-		string $to,
+		string $receiver,
 		string $subject,
 		Message $message,
 		array $extensions = self::NO_HEADERS
 	): void {
 		if (!@mail(
-			$to,
+			$receiver,
 			$this->subject($subject),
 			$message->content(),
 			$this->headers(
