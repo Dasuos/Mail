@@ -1,5 +1,4 @@
 vendor
-example.php
 composer.lock
 *.actual
 *.expected
