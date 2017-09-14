@@ -7,7 +7,7 @@ final class ExemplaryHeaders {
 	private const REPLACEMENTS = [
 		'~Message-Id: <\d+\.[0-9a-z]+@.+>~' => 'Message-Id: example',
 		'~Date: \w+, \d{2} \w+ \d{4} \d{2}:\d{2}:\d{2} \+\d{4}~' => 'Date: example',
-		'~X-Mailer: PHP/\d\.\d\.\d~' => 'X-Mailer: PHP/example',
+		'~X-Mailer: PHP/(\d|\.)+~' => 'X-Mailer: PHP/example',
 		'~[0-9a-z]{20}~' => 'example',
 		'~\s+~' => ' ',
 	];
