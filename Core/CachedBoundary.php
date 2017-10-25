@@ -11,6 +11,9 @@ final class CachedBoundary implements Boundary {
 		$this->origin = $origin;
 	}
 
+	/**
+	 * @internal
+	 */
 	public function hash(): string {
 		if ($this->hash === null)
 			$this->hash = $this->origin->hash();

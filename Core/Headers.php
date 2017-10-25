@@ -10,6 +10,9 @@ final class Headers {
 		$this->list = $list;
 	}
 
+	/**
+	 * @internal
+	 */
 	public function __toString(): string {
 		return implode(
 			PHP_EOL,

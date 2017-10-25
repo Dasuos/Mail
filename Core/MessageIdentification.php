@@ -6,6 +6,9 @@ final class MessageIdentification {
 
 	private const LENGTH = 10;
 
+	/**
+	 * @internal
+	 */
 	public function __toString(): string {
 		return sprintf('<%s.%s@%s>', time(), $this->hash(), $this->domain());
 	}

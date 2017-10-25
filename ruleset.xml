@@ -27,6 +27,7 @@
 		<exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName"/>
 		<exclude name="SlevomatCodingStandard.Types.EmptyLinesAroundTypeBraces"/>
 		<exclude name="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.PartialUse"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment"/>
 	</rule>
 
 	<rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
