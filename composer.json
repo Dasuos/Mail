@@ -2,7 +2,7 @@
   "name": "dasuos/mail",
   "description": "Library providing mail service",
   "type": "library",
-  "homepage": "https://github.com/Dasuos/Mail",
+  "homepage": "https://github.com/dasuos/mail",
   "keywords": [
     "mail"
   ],
@@ -10,7 +10,7 @@
     {
       "name": "Daniel Krnak",
       "email": "dasuos256@gmail.com",
-      "homepage": "https://www.github.com/Dasuos",
+      "homepage": "https://www.github.com/dasuos",
       "role": "Developer"
     }
   ],
