@@ -1,6 +1,7 @@
 <?php
 declare(strict_types = 1);
-namespace Dasuos\Mail\TestCase;
+
+namespace Dasuos\Mail\Misc;
 
 final class ExemplaryHeaders {
 

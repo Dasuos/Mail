@@ -1,15 +1,17 @@
 <?php
 declare(strict_types = 1);
-/**
- * @testCase
- * @phpVersion > 7.1
- */
+
 namespace Dasuos\Mail\Unit;
 
 use Dasuos\Mail;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
+
+/**
+ * @testCase
+ * @phpVersion > 7.1
+ */
 
 final class HtmlMessage extends \Tester\TestCase {
 

@@ -1,16 +1,18 @@
 <?php
 declare(strict_types = 1);
+
+namespace Dasuos\Mail\Integration;
+
+use Dasuos\Mail;
+use Dasuos\Mail\Misc\SequentialBoundaries;
+use Tester\Assert;
+
+require __DIR__ . '/../bootstrap.php';
+
 /**
  * @testCase
  * @phpVersion > 7.1
  */
-namespace Dasuos\Mail\Integration;
-
-use Dasuos\Mail;
-use Dasuos\Mail\TestCase\SequentialBoundaries;
-use Tester\Assert;
-
-require __DIR__ . '/../bootstrap.php';
 
 final class MessageWithAttachment extends \Tester\TestCase {
 
@@ -53,7 +55,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\PlainMessage('content'),
-						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+						__DIR__ . '/attachment.txt'
 					))->content()
 				)
 			)
@@ -99,7 +101,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
-						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+						__DIR__ . '/attachment.txt'
 					))->content()
 				)
 			)
@@ -114,7 +116,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 			'~[0-9a-z]{20}~',
 			(new Mail\MessageWithAttachment(
 				new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
-				__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+				__DIR__ . '/attachment.txt'
 			))->content(),
 			$matches
 		);

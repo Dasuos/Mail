@@ -1,15 +1,17 @@
 <?php
 declare(strict_types = 1);
-/**
- * @testCase
- * @phpVersion > 7.1
- */
+
 namespace Dasuos\Mail\Unit;
 
 use Dasuos\Mail;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
+
+/**
+ * @testCase
+ * @phpVersion > 7.1
+ */
 
 final class MessageWithAttachment extends \Tester\TestCase {
 
@@ -21,7 +23,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 				'random',
 				(new Mail\MessageWithAttachment(
 					new Mail\FakeMessage('content', ['header' => 'value']),
-					__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+					__DIR__ . '/attachment.txt'
 				))->headers()
 			)
 		);
@@ -61,7 +63,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 								'Content-Transfer-Encoding' => '7bit',
 							]
 						),
-						__DIR__ . '/../TestCase/MessageWithAttachment/attachment.txt'
+						__DIR__ . '/attachment.txt'
 					))->content()
 				)
 			)

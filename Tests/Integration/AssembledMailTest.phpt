@@ -1,9 +1,6 @@
 <?php
 declare(strict_types = 1);
-/**
- * @testCase
- * @phpVersion > 7.1
- */
+
 namespace Dasuos\Mail;
 
 function mail(
@@ -24,10 +21,15 @@ function mail(
 	return true;
 }
 
-use Dasuos\Mail\TestCase\ExemplaryHeaders;
+use Dasuos\Mail\Misc\ExemplaryHeaders;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
+
+/**
+ * @testCase
+ * @phpVersion > 7.1
+ */
 
 final class AssembledMailTest extends \Tester\TestCase {
 
