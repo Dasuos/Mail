@@ -23,7 +23,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 				'random',
 				(new Mail\MessageWithAttachment(
 					new Mail\FakeMessage('content', ['header' => 'value']),
-					__DIR__ . '/attachment.txt'
+					__DIR__ . '/../Fixtures/attachment.txt'
 				))->headers()
 			)
 		);
@@ -63,7 +63,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 								'Content-Transfer-Encoding' => '7bit',
 							]
 						),
-						__DIR__ . '/attachment.txt'
+						__DIR__ . '/../Fixtures/attachment.txt'
 					))->content()
 				)
 			)

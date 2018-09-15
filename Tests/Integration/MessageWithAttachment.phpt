@@ -55,7 +55,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\PlainMessage('content'),
-						__DIR__ . '/attachment.txt'
+						__DIR__ . '/../Fixtures/attachment.txt'
 					))->content()
 				)
 			)
@@ -101,7 +101,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 					' ',
 					(new Mail\MessageWithAttachment(
 						new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
-						__DIR__ . '/attachment.txt'
+						__DIR__ . '/../Fixtures/attachment.txt'
 					))->content()
 				)
 			)
@@ -116,7 +116,7 @@ final class MessageWithAttachment extends \Tester\TestCase {
 			'~[0-9a-z]{20}~',
 			(new Mail\MessageWithAttachment(
 				new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
-				__DIR__ . '/attachment.txt'
+				__DIR__ . '/../Fixtures/attachment.txt'
 			))->content(),
 			$matches
 		);
