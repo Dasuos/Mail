@@ -36,12 +36,26 @@ final class MassMail implements Mail {
 	}
 
 	private function header(string $header, array $list): array {
-		if (!in_array($header, ['Bcc', 'Cc']))
+		if (!in_array($header, ['Bcc', 'Cc'], true))
 			throw new \UnexpectedValueException(
 				'Only Bcc anc Cc headers are allowed'
 			);
-		if (!$list)
-			throw new \UnexpectedValueException('Mail list is empty');
-		return [$header => implode(',', $list)];
+		return [$header => implode(',', $this->emails($list))];
+	}
+
+	private function emails(array $list): array {
+		if (
+			$list &&
+			count(
+				array_filter(
+					$list,
+					function(string $email) {
+						return filter_var($email, FILTER_VALIDATE_EMAIL);
+					}
+				)
+			) === count($list)
+		)
+			return $list;
+		throw new \UnexpectedValueException('Invalid email list');
 	}
 }

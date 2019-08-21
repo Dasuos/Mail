@@ -81,6 +81,57 @@ final class AssembledMailTest extends \Tester\TestCase {
 			(string) new ExemplaryHeaders($result)
 		);
 	}
+
+	public function testThrowingOnInvalidSenderEmail() {
+		Assert::exception(
+			function() {
+				(new AssembledMail(
+					'invalid',
+					AssembledMail::HIGH_PRIORITY
+				))->send(
+					'foo@bar.cz',
+					'foo',
+					new FakeMessage('message', [])
+				);
+			},
+			\UnexpectedValueException::class,
+			'Invalid sender email'
+		);
+	}
+
+	public function testThrowingOnInvalidReceiverEmail() {
+		Assert::exception(
+			function() {
+				(new AssembledMail(
+					'foo@bar.cz',
+					AssembledMail::HIGH_PRIORITY
+				))->send(
+					'invalid',
+					'foo',
+					new FakeMessage('message', [])
+				);
+			},
+			\UnexpectedValueException::class,
+			'Invalid receiver email'
+		);
+	}
+
+	public function testThrowingOnInvalidPriority() {
+		Assert::exception(
+			function() {
+				(new AssembledMail(
+					'foo@bar.cz',
+					123
+				))->send(
+					'bar@foo.cz',
+					'foo',
+					new FakeMessage('message', [])
+				);
+			},
+			\UnexpectedValueException::class,
+			'Allowed mail priority types are: 5, 3, 1'
+		);
+	}
 }
 
 (new AssembledMailTest())->run();

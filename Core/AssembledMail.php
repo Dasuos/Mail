@@ -28,9 +28,9 @@ final class AssembledMail implements Mail {
 		array $extensions = self::NO_HEADERS
 	): void {
 		if (!@mail(
-			$receiver,
+			$this->email($receiver, 'receiver'),
 			$this->subject($subject),
-			$message->content(),
+			$this->content($message),
 			$this->headers(
 				$this->from,
 				$this->priority($this->priority),
@@ -39,11 +39,27 @@ final class AssembledMail implements Mail {
 					: $message->headers()
 			)
 		))
-			throw new \UnexpectedValueException('Mail was not accepted for delivery');
+			throw new \UnexpectedValueException(
+				'Mail was not accepted for delivery'
+			);
+	}
+
+	private function email(string $address, string $description): string {
+		if (filter_var($address, FILTER_VALIDATE_EMAIL))
+			return $address;
+		throw new \UnexpectedValueException(
+			sprintf('Invalid %s email', $description)
+		);
 	}
 
 	private function subject(string $subject): string {
-		return '=?UTF-8?B?' . base64_encode($subject) . '?=';
+		return '=?UTF-8?B?' . base64_encode(
+			str_ireplace(["\r", "\n", '%0A', '%0D'], '', $subject)
+		) . '?=';
+	}
+
+	private function content(Message $message): string {
+		return str_replace("\n.", "\n..", $message->content());
 	}
 
 	private function headers(
@@ -54,7 +70,7 @@ final class AssembledMail implements Mail {
 		return (string) new Headers(
 			[
 				'MIME-Version' => '1.0',
-				'From' => $from,
+				'From' => $this->email($from, 'sender'),
 				'Return-Path' => $from,
 				'Date' => date('r'),
 				'X-Sender' => $from,
@@ -66,7 +82,7 @@ final class AssembledMail implements Mail {
 	}
 
 	private function priority(int $priority): int {
-		if (in_array($priority, self::PRIORITIES))
+		if (in_array($priority, self::PRIORITIES, true))
 			return $priority;
 		throw new \UnexpectedValueException(
 			sprintf(

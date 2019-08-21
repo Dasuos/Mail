@@ -127,6 +127,19 @@ final class MessageWithAttachment extends \Tester\TestCase {
 			))->identical()
 		);
 	}
+
+	public function testThrowingOnNonexistentAttachedFile() {
+		Assert::exception(
+			function() {
+				(new Mail\MessageWithAttachment(
+					new Mail\HtmlMessage('<h1>title</h1><p>content</p>'),
+					__DIR__ . '/../Fixtures/nonexistent.txt'
+				))->content();
+			},
+			\UnexpectedValueException::class,
+			'Attached file does not exist'
+		);
+	}
 }
 
 (new MessageWithAttachment())->run();
