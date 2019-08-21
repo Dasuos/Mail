@@ -18,7 +18,7 @@ final class HtmlMessage implements Message {
 
 	public function __construct(string $content) {
 		$this->content = $content;
-		$this->boundary = new CachedBoundary(new RandomBoundary);
+		$this->boundary = new RandomBoundary;
 	}
 
 	public function headers(): array {
@@ -31,18 +31,17 @@ final class HtmlMessage implements Message {
 	}
 
 	public function content(): string {
-		$boundary = $this->boundary->hash();
 		return implode(
 			PHP_EOL . PHP_EOL,
 			[
-				$this->text($boundary, $this->content),
-				$this->html($boundary, $this->content),
-				'--' . $boundary . '--',
+				$this->text($this->boundary, $this->content),
+				$this->html($this->boundary, $this->content),
+				$this->boundary->end(),
 			]
 		);
 	}
 
-	private function text(string $boundary, string $content): string {
+	private function text(RandomBoundary $boundary, string $content): string {
 		return $this->boundHeaders($boundary, 'plain') .
 			strip_tags(
 				html_entity_decode(
@@ -63,21 +62,27 @@ final class HtmlMessage implements Message {
 			);
 	}
 
-	private function html(string $boundary, string $content): string {
+	private function html(RandomBoundary $boundary, string $content): string {
 		return $this->boundHeaders($boundary, 'html') . $content;
 	}
 
-	private function boundHeaders(string $boundary, string $type): string {
-		return implode(PHP_EOL, [
-			'--' . $boundary,
-			new Headers([
-				'Content-Type' => sprintf(
-					'text/%s; charset=%s',
-					$type,
-					self::CHARSET
-				),
-				'Content-Transfer-Encoding' => '7bit',
-			]),
-		]) . PHP_EOL . PHP_EOL;
+	private function boundHeaders(
+		RandomBoundary $boundary,
+		string $type
+	): string {
+		return implode(
+			PHP_EOL,
+			[
+				$boundary->begin(),
+				new Headers([
+					'Content-Type' => sprintf(
+						'text/%s; charset=%s',
+						$type,
+						self::CHARSET
+					),
+					'Content-Transfer-Encoding' => '7bit',
+				]),
+			]
+		) . PHP_EOL . PHP_EOL;
 	}
 }

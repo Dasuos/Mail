@@ -7,16 +7,16 @@ final class MassMail implements Mail {
 
 	private $origin;
 	private $list;
-	private $header;
+	private $mode;
 
 	public function __construct(
 		Mail $origin,
 		array $list,
-		string $header = 'Bcc'
+		string $mode = 'Bcc'
 	) {
 		$this->origin = $origin;
 		$this->list = $list;
-		$this->header = $header;
+		$this->mode = $mode;
 	}
 
 	public function send(
@@ -25,36 +25,36 @@ final class MassMail implements Mail {
 		Message $message,
 		array $extensions = self::NO_HEADERS
 	): void {
+		$header = [
+			$this->cc($this->mode) => implode(',', $this->emails($this->list)),
+		];
 		$this->origin->send(
 			$receiver,
 			$subject,
 			$message,
-			$extensions
-				? $this->header($this->header, $this->list) + $extensions
-				: $this->header($this->header, $this->list)
+			$extensions ? $header + $extensions : $header
 		);
 	}
 
-	private function header(string $header, array $list): array {
-		if (!in_array($header, ['Bcc', 'Cc'], true))
+	private function cc(string $option): string {
+		$option = ucfirst(strtolower($option));
+		if (!in_array($option, ['Bcc', 'Cc'], true))
 			throw new \UnexpectedValueException(
 				'Only Bcc anc Cc headers are allowed'
 			);
-		return [$header => implode(',', $this->emails($list))];
+		return $option;
 	}
 
 	private function emails(array $list): array {
-		if (
-			$list &&
-			count(
-				array_filter(
-					$list,
-					function(string $email) {
-						return filter_var($email, FILTER_VALIDATE_EMAIL);
-					}
-				)
-			) === count($list)
-		)
+		$valid = $list && count(
+			array_filter(
+				$list,
+				function(string $email) {
+					return filter_var($email, FILTER_VALIDATE_EMAIL);
+				}
+			)
+		) === count($list);
+		if ($valid)
 			return $list;
 		throw new \UnexpectedValueException('Invalid email list');
 	}

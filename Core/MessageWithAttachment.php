@@ -12,7 +12,7 @@ final class MessageWithAttachment implements Message {
 	public function __construct(Message $origin, string $path) {
 		$this->origin = $origin;
 		$this->path = $path;
-		$this->boundary = new CachedBoundary(new RandomBoundary());
+		$this->boundary = new RandomBoundary;
 	}
 
 	public function headers(): array {
@@ -25,22 +25,23 @@ final class MessageWithAttachment implements Message {
 	}
 
 	public function content(): string {
-		$boundary = $this->boundary->hash();
 		return implode(
 			PHP_EOL . PHP_EOL,
 			[
-				'--' . $boundary . PHP_EOL .
-				new Headers($this->origin->headers()),
+				$this->boundary->begin() . PHP_EOL . new Headers($this->origin->headers()),
 				$this->origin->content(),
-				$this->attachment($boundary, $this->path),
+				$this->attachment($this->boundary, $this->path),
 			]
 		);
 	}
 
-	private function attachment(string $boundary, string $path): string {
+	private function attachment(
+		RandomBoundary $boundary,
+		string $path
+	): string {
 		$name = basename($path);
 		return implode(PHP_EOL, [
-			'--' . $boundary,
+			$boundary->begin(),
 			new Headers([
 				'Content-Type' => sprintf(
 					'application/octet-stream; name="%s"',
@@ -53,7 +54,7 @@ final class MessageWithAttachment implements Message {
 				),
 			]),
 			PHP_EOL . $this->file($path),
-			'--' . $boundary . '--',
+			$boundary->end(),
 		]);
 	}
 
