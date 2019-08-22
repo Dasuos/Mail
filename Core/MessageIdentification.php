@@ -17,8 +17,6 @@ final class MessageIdentification {
 	}
 
 	private function domain(): string {
-		return isset($_SERVER['HTTP_HOST'])
-			? $_SERVER['HTTP_HOST']
-			: php_uname('n');
+		return $_SERVER['HTTP_HOST'] ?? php_uname('n');
 	}
 }

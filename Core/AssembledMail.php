@@ -53,9 +53,12 @@ final class AssembledMail implements Mail {
 	}
 
 	private function subject(string $subject): string {
-		return '=?UTF-8?B?' . base64_encode(
-			str_ireplace(["\r", "\n", '%0A', '%0D'], '', $subject)
-		) . '?=';
+		return sprintf(
+			'=?UTF-8?B?%s?=',
+			base64_encode(
+				str_ireplace(["\r", "\n", '%0A', '%0D'], '', $subject)
+			)
+		);
 	}
 
 	private function content(Message $message): string {
