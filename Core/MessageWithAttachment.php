@@ -58,15 +58,9 @@ final class MessageWithAttachment implements Message {
 		]);
 	}
 
-	private function existingPath(string $path): string {
-		if (file_exists($path))
-			return $path;
-		throw new \UnexpectedValueException('Attached file does not exist');
-	}
-
 	private function file(string $path): string {
-		return chunk_split(
-			base64_encode(file_get_contents($this->existingPath($path)))
-		);
+		if (file_exists($path))
+			return chunk_split(base64_encode(file_get_contents($path)));
+		throw new \UnexpectedValueException('Attached file does not exist');
 	}
 }
